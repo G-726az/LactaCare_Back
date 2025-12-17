@@ -1,0 +1,12 @@
+/target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+.idea/
+.vscode/
+*.iml
+.env
+application.properties
+application.yml

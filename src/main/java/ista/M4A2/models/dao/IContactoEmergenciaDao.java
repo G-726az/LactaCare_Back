@@ -1,0 +1,9 @@
+package ista.M4A2.models.dao;
+
+import org.springframework.data.repository.CrudRepository;
+
+import ista.M4A2.models.entity.ContactoEmergencia;
+
+public interface IContactoEmergenciaDao extends CrudRepository<ContactoEmergencia, Long>{
+
+}
