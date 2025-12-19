@@ -3,6 +3,7 @@ package ista.M4A2.models.entity;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,15 @@ public class PersonaEmpleado implements Serializable {
     
     @Column(name = "Fechanacimiento")
     private LocalDate fechaNacimiento;
+    
+    @Column(name = "Password", length = 100)
+    private String password;
+    
+    @Column(name = "reset_token")
+    private String resetToken;
+    
+    @Column(name = "token_expiration")
+    private LocalDateTime tokenExpiration;
     
     @ManyToOne
     @JoinColumn(name = "Rol_empleado", referencedColumnName = "Id_roles")
@@ -154,6 +164,30 @@ public class PersonaEmpleado implements Serializable {
     
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public String getResetToken() {
+        return resetToken;
+    }
+    
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+    
+    public LocalDateTime getTokenExpiration() {
+        return tokenExpiration;
+    }
+    
+    public void setTokenExpiration(LocalDateTime tokenExpiration) {
+        this.tokenExpiration = tokenExpiration;
     }
     
     public Roles getRol() {

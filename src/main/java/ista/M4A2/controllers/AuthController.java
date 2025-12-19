@@ -15,6 +15,7 @@ import ista.M4A2.models.entity.PersonaPaciente;
 import ista.M4A2.models.services.serv.PersonaEmpleadoService;
 import ista.M4A2.models.services.serv.IPersonaPacienteService;
 import ista.M4A2.models.services.serv.RolesService;
+import ista.M4A2.verificaciones.PasswordValidator;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -148,9 +149,16 @@ public class AuthController {
                 .body(new LoginResponse(false, "No tienes permisos de médico", null));
         }
 
-        // Los empleados NO tienen password en tu base de datos actual
-        // Por ahora, aceptamos cualquier password para empleados
-        // IMPORTANTE: Esto es temporal, deberías agregar un campo password a PersonaEmpleado
+        // Verificar contraseña (ahora los empleados tienen password)
+        if (empleado.getPassword() == null || empleado.getPassword().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(false, "Usuario sin contraseña configurada. Contacte al administrador", null));
+        }
+        
+        if (!passwordEncoder.matches(password, empleado.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+        }
         
         // Crear datos de respuesta
         Map<String, Object> userData = new HashMap<>();
@@ -213,6 +221,13 @@ public class AuthController {
                 .body(new ApiResponse(false, "Campos requeridos faltantes"));
         }
 
+        // Validar contraseña
+        String passwordError = PasswordValidator.validatePassword(request.getPassword());
+        if (passwordError != null) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, passwordError));
+        }
+
         // Verificar si ya existe la cédula
         List<PersonaPaciente> existentes = personaPacienteService.findAll();
         boolean cedulaExiste = existentes.stream()
@@ -255,9 +270,17 @@ public class AuthController {
     private ResponseEntity<ApiResponse> registerEmpleado(RegisterRequest request) {
         // Validar campos requeridos
         if (request.getCedula() == null || request.getPrimer_nombre() == null || 
-            request.getPrimer_apellido() == null || request.getRol_empleado() == null) {
+            request.getPrimer_apellido() == null || request.getRol_empleado() == null ||
+            request.getPassword() == null) {
             return ResponseEntity.badRequest()
-                .body(new ApiResponse(false, "Campos requeridos faltantes"));
+                .body(new ApiResponse(false, "Campos requeridos faltantes (incluye contraseña)"));
+        }
+
+        // Validar contraseña
+        String passwordError = PasswordValidator.validatePassword(request.getPassword());
+        if (passwordError != null) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, passwordError));
         }
 
         // Verificar si ya existe la cédula
@@ -283,6 +306,9 @@ public class AuthController {
         if (request.getFecha_nacimiento() != null && !request.getFecha_nacimiento().isEmpty()) {
             empleado.setFechaNacimiento(LocalDate.parse(request.getFecha_nacimiento()));
         }
+
+        // Encriptar contraseña
+        empleado.setPassword(passwordEncoder.encode(request.getPassword()));
 
         // Asignar rol
         try {

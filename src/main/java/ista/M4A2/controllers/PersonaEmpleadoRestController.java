@@ -2,10 +2,12 @@ package ista.M4A2.controllers;
 
 import ista.M4A2.models.entity.PersonaEmpleado;
 import ista.M4A2.models.services.serv.PersonaEmpleadoService;
+import ista.M4A2.verificaciones.PasswordValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +19,9 @@ public class PersonaEmpleadoRestController {
     
     @Autowired
     private PersonaEmpleadoService empleadoService;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     @GetMapping
     public ResponseEntity<List<PersonaEmpleado>> obtenerTodos() {
@@ -75,8 +80,18 @@ public class PersonaEmpleadoRestController {
     }
     
     @PostMapping
-    public ResponseEntity<PersonaEmpleado> crear(@RequestBody PersonaEmpleado empleado) {
+    public ResponseEntity<?> crear(@RequestBody PersonaEmpleado empleado) {
         try {
+            // Validar contraseña si se proporciona
+            if (empleado.getPassword() != null && !empleado.getPassword().isEmpty()) {
+                String passwordError = PasswordValidator.validatePassword(empleado.getPassword());
+                if (passwordError != null) {
+                    return ResponseEntity.badRequest().body(passwordError);
+                }
+                // Encriptar contraseña
+                empleado.setPassword(passwordEncoder.encode(empleado.getPassword()));
+            }
+            
             PersonaEmpleado nuevoEmpleado = empleadoService.guardar(empleado);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoEmpleado);
         } catch (Exception e) {
@@ -85,9 +100,32 @@ public class PersonaEmpleadoRestController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<PersonaEmpleado> actualizar(@PathVariable Integer id, @RequestBody PersonaEmpleado empleado) {
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody PersonaEmpleado empleado) {
         try {
-            PersonaEmpleado empleadoActualizado = empleadoService.actualizar(id, empleado);
+            PersonaEmpleado empleadoExistente = empleadoService.obtenerPorId(id);
+            
+            // Actualizar campos básicos
+            empleadoExistente.setPerfilEmpleadoImg(empleado.getPerfilEmpleadoImg());
+            empleadoExistente.setCedula(empleado.getCedula());
+            empleadoExistente.setPrimerNombre(empleado.getPrimerNombre());
+            empleadoExistente.setSegundoNombre(empleado.getSegundoNombre());
+            empleadoExistente.setPrimerApellido(empleado.getPrimerApellido());
+            empleadoExistente.setSegundoApellido(empleado.getSegundoApellido());
+            empleadoExistente.setCorreo(empleado.getCorreo());
+            empleadoExistente.setTelefono(empleado.getTelefono());
+            empleadoExistente.setFechaNacimiento(empleado.getFechaNacimiento());
+            empleadoExistente.setRol(empleado.getRol());
+            
+            // Actualizar contraseña si se proporciona una nueva
+            if (empleado.getPassword() != null && !empleado.getPassword().isEmpty()) {
+                String passwordError = PasswordValidator.validatePassword(empleado.getPassword());
+                if (passwordError != null) {
+                    return ResponseEntity.badRequest().body(passwordError);
+                }
+                empleadoExistente.setPassword(passwordEncoder.encode(empleado.getPassword()));
+            }
+            
+            PersonaEmpleado empleadoActualizado = empleadoService.guardar(empleadoExistente);
             return ResponseEntity.ok(empleadoActualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

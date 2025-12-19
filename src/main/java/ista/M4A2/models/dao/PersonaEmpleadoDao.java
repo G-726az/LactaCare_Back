@@ -15,4 +15,6 @@ public interface PersonaEmpleadoDao extends JpaRepository<PersonaEmpleado, Integ
     Optional<PersonaEmpleado> findByCorreo(String correo);
     
     List<PersonaEmpleado> findByRolIdRoles(Integer idRol);
+    
+    Optional<PersonaEmpleado> findByResetToken(String resetToken);
 }

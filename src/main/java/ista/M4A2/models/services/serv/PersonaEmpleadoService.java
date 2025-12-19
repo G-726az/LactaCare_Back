@@ -25,4 +25,6 @@ public interface PersonaEmpleadoService {
     PersonaEmpleado asignarHorario(Integer idEmpleado, Integer idHorario);
     
     PersonaEmpleado removerHorario(Integer idEmpleado, Integer idHorario);
+    
+    PersonaEmpleado findByResetToken(String token);
 }

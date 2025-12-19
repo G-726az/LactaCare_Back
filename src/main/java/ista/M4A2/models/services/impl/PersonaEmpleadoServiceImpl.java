@@ -108,4 +108,11 @@ public class PersonaEmpleadoServiceImpl implements PersonaEmpleadoService {
         empleado.getHorarios().remove(horario);
         return empleadoDao.save(empleado);
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public PersonaEmpleado findByResetToken(String token) {
+        return empleadoDao.findByResetToken(token)
+                .orElse(null);
+    }
 }
