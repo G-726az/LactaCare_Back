@@ -19,13 +19,14 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                     "http://localhost:4200",
                     "http://localhost:4300",
-                    "https://tu-dominio-frontend.com" // Cambiar por tu dominio en producción
+                    "https://tu-dominio-frontend.com"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
     }
+
 
     @Bean
     public CorsFilter corsFilter() {
