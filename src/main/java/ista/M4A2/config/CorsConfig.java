@@ -5,58 +5,56 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins(
-                    "http://localhost:4200",
-                    "http://localhost:4300",
-                    "https://tu-dominio-frontend.com"
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-                .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
-
-
+public class CorsConfig {
+    
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
+        
+        // Permitir credenciales
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Arrays.asList(
+        
+        // Usar AllowedOriginPatterns para compatibilidad con allowCredentials=true
+        corsConfiguration.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:4200",
             "http://localhost:4300",
+            "http://localhost:8080",
+            "http://192.168.56.47*:*",
             "https://tu-dominio-frontend.com"
         ));
+        
+        // Headers permitidos
         corsConfiguration.setAllowedHeaders(Arrays.asList(
-            "Origin",
-            "Content-Type",
-            "Accept",
+            "Origin", 
+            "Content-Type", 
+            "Accept", 
             "Authorization",
-            "X-Requested-With",
-            "Access-Control-Request-Method",
+            "X-Requested-With", 
+            "Access-Control-Request-Method", 
             "Access-Control-Request-Headers"
         ));
+        
+        // Headers expuestos al cliente
         corsConfiguration.setExposedHeaders(Arrays.asList(
             "Access-Control-Allow-Origin",
             "Access-Control-Allow-Credentials"
         ));
+        
+        // Métodos HTTP permitidos
         corsConfiguration.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
         ));
+        
+        // Tiempo de cache para preflight requests
         corsConfiguration.setMaxAge(3600L);
-
+        
+        // Registrar configuración para todos los endpoints
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", corsConfiguration);
+        source.registerCorsConfiguration("/**", corsConfiguration);
         
         return new CorsFilter(source);
     }

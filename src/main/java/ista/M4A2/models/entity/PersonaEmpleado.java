@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "Persona_Empleado")
 public class PersonaEmpleado implements Serializable {
@@ -21,7 +23,7 @@ public class PersonaEmpleado implements Serializable {
     @Column(name = "Perfil_empleado_img")
     private String perfilEmpleadoImg;
     
-    @Column(name = "Cedula", nullable = false)
+    @Column(name = "Cedula", nullable = false, unique = true, length = 13)
     private String cedula;
     
     @Column(name = "Primer_nombre")
@@ -36,7 +38,7 @@ public class PersonaEmpleado implements Serializable {
     @Column(name = "Segundo_apellido")
     private String segundoApellido;
     
-    @Column(name = "Correo")
+    @Column(name = "Correo", unique = true)
     private String correo;
     
     @Column(name = "Telefono")
@@ -45,14 +47,34 @@ public class PersonaEmpleado implements Serializable {
     @Column(name = "Fechanacimiento")
     private LocalDate fechaNacimiento;
     
+    // ===== CAMPOS DE AUTENTICACIÓN =====
+    
     @Column(name = "Password", length = 100)
     private String password;
+    
+    @Column(name = "google_id", unique = true)
+    private String googleId;
+    
+    @Column(name = "auth_provider", length = 20)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+    
+    @Column(name = "account_status", length = 20)
+    @Enumerated(EnumType.STRING)
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
+    
+    @Column(name = "profile_completed")
+    private Boolean profileCompleted = false;
+    
+    // ===== CAMPOS DE RECUPERACIÓN DE CONTRASEÑA =====
     
     @Column(name = "reset_token")
     private String resetToken;
     
     @Column(name = "token_expiration")
     private LocalDateTime tokenExpiration;
+    
+    // ===== RELACIONES =====
     
     @ManyToOne
     @JoinColumn(name = "Rol_empleado", referencedColumnName = "Id_roles")
@@ -66,10 +88,22 @@ public class PersonaEmpleado implements Serializable {
     )
     private List<Horarios> horarios = new ArrayList<>();
     
+    @JsonIgnore
     @OneToMany(mappedBy = "empleado")
     private List<Atencion> atenciones;
     
-    // Constructores
+    // ===== ENUMS =====
+    
+    public enum AuthProvider {
+        LOCAL, GOOGLE
+    }
+    
+    public enum AccountStatus {
+        ACTIVE, SUSPENDED, PENDING, INCOMPLETE
+    }
+    
+    // ===== CONSTRUCTORES =====
+    
     public PersonaEmpleado() {
     }
     
@@ -85,7 +119,8 @@ public class PersonaEmpleado implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
     
-    // Getters y Setters
+    // ===== GETTERS Y SETTERS =====
+    
     public Integer getIdPerEmpleado() {
         return idPerEmpleado;
     }
@@ -172,6 +207,38 @@ public class PersonaEmpleado implements Serializable {
     
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public String getGoogleId() {
+        return googleId;
+    }
+    
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
+    
+    public AuthProvider getAuthProvider() {
+        return authProvider;
+    }
+    
+    public void setAuthProvider(AuthProvider authProvider) {
+        this.authProvider = authProvider;
+    }
+    
+    public AccountStatus getAccountStatus() {
+        return accountStatus;
+    }
+    
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+    
+    public Boolean getProfileCompleted() {
+        return profileCompleted;
+    }
+    
+    public void setProfileCompleted(Boolean profileCompleted) {
+        this.profileCompleted = profileCompleted;
     }
     
     public String getResetToken() {
