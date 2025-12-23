@@ -3,8 +3,11 @@ package ista.M4A2.models.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,7 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Sala_Lactancia") 
+@Table(name = "Sala_Lactancia")
 public class Sala_Lactancia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,9 +25,9 @@ public class Sala_Lactancia implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id_Lactario")
-    private Long idLactario; // INTEGER
+    private Long idLactario;
 
-    // Campos simples (Nombre, Dirección, Correo, Telefono, Latitud, Longitud)
+    // Campos simples
     @Column(name = "Nombre_CMedico") private String nombreCMedico;
     @Column(name = "Direccion_CMedico") private String direccionCMedico;
     @Column(name = "Correo_CMedico") private String correoCMedico;
@@ -32,113 +35,118 @@ public class Sala_Lactancia implements Serializable {
     @Column(name = "Latitud_CMedico") private String latitudCMedico;
     @Column(name = "Longitud_CMedico") private String longitudCMedico;
 
-    //Muchos a Uno con Horarios (fk_Lactario_Horario_CMedico_Horarios)
-    @ManyToOne
-    @JoinColumn(name = "Horario_CMedico", nullable = true) // Set null implica nullable=true en la FK
+    // Relaciones (Vuelven a ser LAZY y limpias, como debe ser)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Horario_CMedico", nullable = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Horarios horario;
 
-    //Muchos a Uno con Institucion (fk_Lactario_Id_Institucion_Institucion)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Id_Institucion")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Institucion institucion;
 
-    //Muchos a Uno con DiasLaborables (fk_Dias_laborables_id_dia_laborable_Lactario)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_diaslaborables")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Dias_Laborables diasLaborables;
     
-    //Uno a Muchos con Refrigerador (fk_Refrigerador_Id_Lactario_Lactario)
-    @OneToMany(mappedBy = "sala_lactancia")
+    @OneToMany(mappedBy = "sala_lactancia", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("sala_lactancia") 
     private List<Refrigerador> refrigeradores;
 
-	public Long getIdLactario() {
-		return idLactario;
-	}
+    // --- GETTERS Y SETTERS ---
 
-	public void setIdLactario(Long idLactario) {
-		this.idLactario = idLactario;
-	}
+    public Long getIdLactario() {
+        return idLactario;
+    }
 
-	public String getNombreCMedico() {
-		return nombreCMedico;
-	}
+    public void setIdLactario(Long idLactario) {
+        this.idLactario = idLactario;
+    }
 
-	public void setNombreCMedico(String nombreCMedico) {
-		this.nombreCMedico = nombreCMedico;
-	}
+    public String getNombreCMedico() {
+        return nombreCMedico;
+    }
 
-	public String getDireccionCMedico() {
-		return direccionCMedico;
-	}
+    public void setNombreCMedico(String nombreCMedico) {
+        this.nombreCMedico = nombreCMedico;
+    }
 
-	public void setDireccionCMedico(String direccionCMedico) {
-		this.direccionCMedico = direccionCMedico;
-	}
+    public String getDireccionCMedico() {
+        return direccionCMedico;
+    }
 
-	public String getCorreoCMedico() {
-		return correoCMedico;
-	}
+    public void setDireccionCMedico(String direccionCMedico) {
+        this.direccionCMedico = direccionCMedico;
+    }
 
-	public void setCorreoCMedico(String correoCMedico) {
-		this.correoCMedico = correoCMedico;
-	}
+    public String getCorreoCMedico() {
+        return correoCMedico;
+    }
 
-	public String getTelefonoCMedico() {
-		return telefonoCMedico;
-	}
+    public void setCorreoCMedico(String correoCMedico) {
+        this.correoCMedico = correoCMedico;
+    }
 
-	public void setTelefonoCMedico(String telefonoCMedico) {
-		this.telefonoCMedico = telefonoCMedico;
-	}
+    public String getTelefonoCMedico() {
+        return telefonoCMedico;
+    }
 
-	public String getLatitudCMedico() {
-		return latitudCMedico;
-	}
+    public void setTelefonoCMedico(String telefonoCMedico) {
+        this.telefonoCMedico = telefonoCMedico;
+    }
 
-	public void setLatitudCMedico(String latitudCMedico) {
-		this.latitudCMedico = latitudCMedico;
-	}
+    public String getLatitudCMedico() {
+        return latitudCMedico;
+    }
 
-	public String getLongitudCMedico() {
-		return longitudCMedico;
-	}
+    public void setLatitudCMedico(String latitudCMedico) {
+        this.latitudCMedico = latitudCMedico;
+    }
 
-	public void setLongitudCMedico(String longitudCMedico) {
-		this.longitudCMedico = longitudCMedico;
-	}
+    public String getLongitudCMedico() {
+        return longitudCMedico;
+    }
 
-	public Horarios getHorario() {
-		return horario;
-	}
+    public void setLongitudCMedico(String longitudCMedico) {
+        this.longitudCMedico = longitudCMedico;
+    }
 
-	public void setHorario(Horarios horario) {
-		this.horario = horario;
-	}
+    public Horarios getHorario() {
+        return horario;
+    }
 
-	public Institucion getInstitucion() {
-		return institucion;
-	}
+    public void setHorario(Horarios horario) {
+        this.horario = horario;
+    }
 
-	public void setInstitucion(Institucion institucion) {
-		this.institucion = institucion;
-	}
+    public Institucion getInstitucion() {
+        return institucion;
+    }
 
-	public Dias_Laborables getDiasLaborables() {
-		return diasLaborables;
-	}
+    public void setInstitucion(Institucion institucion) {
+        this.institucion = institucion;
+    }
 
-	public void setDiasLaborables(Dias_Laborables diasLaborables) {
-		this.diasLaborables = diasLaborables;
-	}
+    public Dias_Laborables getDiasLaborables() {
+        return diasLaborables;
+    }
 
-	public List<Refrigerador> getRefrigeradores() {
-		return refrigeradores;
-	}
+    public void setDiasLaborables(Dias_Laborables diasLaborables) {
+        this.diasLaborables = diasLaborables;
+    }
 
-	public void setRefrigeradores(List<Refrigerador> refrigeradores) {
-		this.refrigeradores = refrigeradores;
-	}
-	public String aTexto() {
+    public List<Refrigerador> getRefrigeradores() {
+        return refrigeradores;
+    }
+
+    public void setRefrigeradores(List<Refrigerador> refrigeradores) {
+        this.refrigeradores = refrigeradores;
+    }
+    
+    // --- TU MÉTODO RESTAURADO ---
+    public String aTexto() {
         StringBuilder sb = new StringBuilder();
         
         sb.append("- Nombre Centro: ").append(nombreCMedico != null ? nombreCMedico : "Sin nombre");
@@ -146,11 +154,9 @@ public class Sala_Lactancia implements Serializable {
         sb.append(", Teléfono: ").append(telefonoCMedico != null ? telefonoCMedico : "No registrado");
         
         if (institucion != null) {
-            
             sb.append(", Institución: ").append(institucion.getNombreInstitucion()); 
         }
 
-        
         if (horario != null) {
             sb.append(", Horario: ").append(horario.obtenerTextoHorario());
         } else {
@@ -174,5 +180,4 @@ public class Sala_Lactancia implements Serializable {
         
         return sb.toString();
     }
-    
 }

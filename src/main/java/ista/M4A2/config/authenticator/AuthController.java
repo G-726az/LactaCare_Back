@@ -4,8 +4,30 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.*;
 
+=======
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import ista.M4A2.dto.ApiResponse;
+import ista.M4A2.dto.LoginRequest;
+import ista.M4A2.dto.LoginResponse;
+import ista.M4A2.dto.RegisterRequest;
+import ista.M4A2.models.entity.PersonaEmpleado;
+import ista.M4A2.models.entity.PersonaPaciente;
+import ista.M4A2.models.services.serv.PersonaEmpleadoService;
+import ista.M4A2.models.services.serv.IPersonaPacienteService;
+import ista.M4A2.models.services.serv.RolesService;
+import ista.M4A2.verificaciones.PasswordValidator;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+>>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
@@ -14,6 +36,28 @@ public class AuthController {
     @Autowired
     private AuthenticationService authenticationService;
     
+<<<<<<< HEAD
+=======
+    @Autowired
+    private IPersonaPacienteService personaPacienteService;
+
+    @Autowired
+    private PersonaEmpleadoService personaEmpleadoService;
+
+    @Autowired
+    private RolesService rolesService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    
+    // =====================================================
+    // ENDPOINTS DE GOOGLE OAUTH2 Y JWT (Sistema Nuevo)
+    // =====================================================
+    
+>>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
     /**
      * Login con Google OAuth2
      * POST /api/auth/google
@@ -39,6 +83,7 @@ public class AuthController {
     }
     
     /**
+<<<<<<< HEAD
      * Login tradicional con email y password
      * POST /api/auth/login
      */
@@ -55,6 +100,9 @@ public class AuthController {
     
     /**
      * Registro de nuevo paciente
+=======
+     * Registro de nuevo paciente con JWT
+>>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
      * POST /api/auth/register/paciente
      */
     @PostMapping("/register/paciente")
@@ -69,7 +117,11 @@ public class AuthController {
     }
     
     /**
+<<<<<<< HEAD
      * Registro de nuevo empleado (Doctor/Admin)
+=======
+     * Registro de nuevo empleado (Doctor/Admin) con JWT
+>>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
      * POST /api/auth/register/empleado
      */
     @PostMapping("/register/empleado")
@@ -101,6 +153,413 @@ public class AuthController {
         }
     }
     
+<<<<<<< HEAD
+=======
+    // =====================================================
+    // ENDPOINTS DE LOGIN TRADICIONAL (Sistema Legacy Integrado)
+    // =====================================================
+    
+    /**
+     * Login tradicional con cédula y password (UNIFICADO)
+     * Soporta tanto el formato nuevo (JWT) como el formato legacy
+     * POST /api/auth/login
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            String cedula = request.getCedula();
+            String password = request.getPassword();
+            String tipoUsuario = request.getTipoUsuario();
+
+            // Validaciones básicas
+            if (cedula == null || cedula.trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(new LoginResponse(false, "La cédula es requerida", null));
+            }
+
+            if (password == null || password.trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(new LoginResponse(false, "La contraseña es requerida", null));
+            }
+
+            // Buscar según el tipo de usuario
+            if ("PACIENTE".equalsIgnoreCase(tipoUsuario)) {
+                return loginPacienteUnificado(cedula, password);
+            } else if ("MEDICO".equalsIgnoreCase(tipoUsuario) || "ADMINISTRADOR".equalsIgnoreCase(tipoUsuario)) {
+                return loginEmpleadoUnificado(cedula, password, tipoUsuario);
+            } else {
+                return ResponseEntity.badRequest()
+                    .body(new LoginResponse(false, "Tipo de usuario no válido", null));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new LoginResponse(false, "Error en el servidor: " + e.getMessage(), null));
+        }
+    }
+    
+    /**
+     * Login unificado para Pacientes (con JWT)
+     */
+    private ResponseEntity<LoginResponse> loginPacienteUnificado(String cedula, String password) {
+        // Buscar paciente por cédula
+        List<PersonaPaciente> pacientes = personaPacienteService.findAll();
+        PersonaPaciente paciente = pacientes.stream()
+            .filter(p -> cedula.equals(p.getCedula()))
+            .findFirst()
+            .orElse(null);
+
+        if (paciente == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+        }
+
+        // Verificar contraseña
+        if (!passwordEncoder.matches(password, paciente.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+        }
+
+        // Generar JWT Token
+        String accessToken = jwtTokenProvider.generateToken(
+            paciente.getId(), 
+            "PACIENTE", 
+            "PACIENTE", 
+            paciente.getCorreo()
+        );
+        
+        String refreshToken = jwtTokenProvider.generateRefreshToken(
+            paciente.getId(), 
+            "PACIENTE"
+        );
+
+        // Crear datos de respuesta con tokens
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("id", paciente.getId());
+        userData.put("cedula", paciente.getCedula());
+        userData.put("nombre_completo", paciente.getPrimerNombre() + " " + 
+            (paciente.getSegundoNombre() != null ? paciente.getSegundoNombre() + " " : "") +
+            paciente.getPrimerApellido() + " " +
+            (paciente.getSegundoApellido() != null ? paciente.getSegundoApellido() : ""));
+        userData.put("primer_nombre", paciente.getPrimerNombre());
+        userData.put("primer_apellido", paciente.getPrimerApellido());
+        userData.put("correo", paciente.getCorreo());
+        userData.put("telefono", paciente.getTelefono());
+        userData.put("rol", "PACIENTE");
+        userData.put("rol_id", 6);
+        userData.put("tipo", "PACIENTE");
+        userData.put("fecha_nacimiento", paciente.getFechaNacimiento());
+        userData.put("perfil_img", paciente.getImagenPerfil());
+        
+        // AGREGAR TOKENS JWT
+        userData.put("access_token", accessToken);
+        userData.put("refresh_token", refreshToken);
+        userData.put("token_type", "Bearer");
+        userData.put("expires_in", jwtTokenProvider.getExpirationInSeconds());
+
+        return ResponseEntity.ok(new LoginResponse(true, "Login exitoso", userData));
+    }
+
+    /**
+     * Login unificado para Empleados (Médicos/Administradores) con JWT
+     */
+    private ResponseEntity<LoginResponse> loginEmpleadoUnificado(String cedula, String password, String tipoUsuario) {
+        System.out.println("\n========== DEBUG LOGIN EMPLEADO ==========");
+        System.out.println("1. Cédula recibida: [" + cedula + "]");
+        System.out.println("2. Password recibida: [" + password + "]");
+        System.out.println("3. Tipo usuario recibido: [" + tipoUsuario + "]");
+        
+        // Buscar empleado por cédula
+        PersonaEmpleado empleado = null;
+        try {
+            empleado = personaEmpleadoService.obtenerPorCedula(cedula);
+            System.out.println("4. ✅ Empleado encontrado:");
+            System.out.println("   - ID: " + empleado.getIdPerEmpleado());
+            System.out.println("   - Nombre: " + empleado.getPrimerNombre() + " " + empleado.getPrimerApellido());
+            System.out.println("   - Cédula en BD: [" + empleado.getCedula() + "]");
+            System.out.println("   - Rol ID: " + (empleado.getRol() != null ? empleado.getRol().getIdRoles() : "NULL"));
+            System.out.println("   - Rol Nombre: " + (empleado.getRol() != null ? empleado.getRol().getNombreRol() : "NULL"));
+            
+        } catch (RuntimeException e) {
+            System.out.println("4. ❌ ERROR: No se encontró empleado con cédula: " + cedula);
+            System.out.println("   Excepción: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+        }
+
+        // Verificar que el rol coincida con el tipo de usuario solicitado
+        System.out.println("5. Verificando permisos...");
+        String rolNombre = empleado.getRol() != null ? empleado.getRol().getNombreRol() : "";
+        Integer rolId = empleado.getRol() != null ? empleado.getRol().getIdRoles() : null;
+        
+        System.out.println("   - Rol en BD: " + rolNombre + " (ID: " + rolId + ")");
+        System.out.println("   - Tipo usuario solicitado: " + tipoUsuario);
+        
+        if ("ADMINISTRADOR".equalsIgnoreCase(tipoUsuario)) {
+            System.out.println("   - Validando rol de ADMINISTRADOR...");
+            if (rolId == null || rolId != 1) {
+                System.out.println("   ❌ RECHAZADO: Se esperaba rol_id=1, pero tiene rol_id=" + rolId);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse(false, "No tienes permisos de administrador", null));
+            }
+            System.out.println("   ✅ Rol de administrador verificado");
+        }
+        
+        if ("MEDICO".equalsIgnoreCase(tipoUsuario)) {
+            System.out.println("   - Validando rol de MÉDICO...");
+            if (rolId == null || rolId != 2) {
+                System.out.println("   ❌ RECHAZADO: Se esperaba rol_id=2, pero tiene rol_id=" + rolId);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse(false, "No tienes permisos de médico", null));
+            }
+            System.out.println("   ✅ Rol de médico verificado");
+        }
+
+        // Verificar contraseña
+        System.out.println("6. Verificando contraseña...");
+        System.out.println("   - Password ingresada: [" + password + "]");
+        System.out.println("   - Password ingresada length: " + password.length());
+        System.out.println("   - Password ingresada bytes: " + java.util.Arrays.toString(password.getBytes()));
+        
+        if (empleado.getPassword() == null || empleado.getPassword().isEmpty()) {
+            System.out.println("   ❌ ERROR: Usuario sin contraseña en BD");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(false, "Usuario sin contraseña configurada. Contacte al administrador", null));
+        }
+        
+        System.out.println("   - Hash en BD: " + empleado.getPassword());
+        System.out.println("   - Hash length: " + empleado.getPassword().length());
+        System.out.println("   - Hash empieza con $2a$: " + empleado.getPassword().startsWith("$2a$"));
+        System.out.println("   - PasswordEncoder class: " + passwordEncoder.getClass().getName());
+        
+        // Intentar el match
+        boolean passwordMatch = false;
+        try {
+            passwordMatch = passwordEncoder.matches(password, empleado.getPassword());
+            System.out.println("   - passwordEncoder.matches() resultado: " + passwordMatch);
+        } catch (Exception e) {
+            System.out.println("   ❌ EXCEPCIÓN al verificar password:");
+            e.printStackTrace();
+        }
+        
+        if (!passwordMatch) {
+            System.out.println("   ❌ CONTRASEÑA INCORRECTA");
+            System.out.println("==========================================\n");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+        }
+        
+        System.out.println("   ✅ CONTRASEÑA CORRECTA");
+        System.out.println("7. ✅ LOGIN EXITOSO - Generando tokens...");
+        
+        // Generar JWT Token
+        String accessToken = jwtTokenProvider.generateToken(
+            empleado.getIdPerEmpleado().longValue(), 
+            "EMPLEADO", 
+            rolNombre, 
+            empleado.getCorreo()
+        );
+        
+        String refreshToken = jwtTokenProvider.generateRefreshToken(
+            empleado.getIdPerEmpleado().longValue(), 
+            "EMPLEADO"
+        );
+        
+        // Crear datos de respuesta con tokens
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("id", empleado.getIdPerEmpleado());
+        userData.put("cedula", empleado.getCedula());
+        userData.put("nombre_completo", empleado.getPrimerNombre() + " " + 
+            (empleado.getSegundoNombre() != null ? empleado.getSegundoNombre() + " " : "") +
+            empleado.getPrimerApellido() + " " +
+            (empleado.getSegundoApellido() != null ? empleado.getSegundoApellido() : ""));
+        userData.put("primer_nombre", empleado.getPrimerNombre());
+        userData.put("primer_apellido", empleado.getPrimerApellido());
+        userData.put("correo", empleado.getCorreo());
+        userData.put("telefono", empleado.getTelefono());
+        userData.put("rol", rolNombre);
+        userData.put("rol_id", empleado.getRol().getIdRoles());
+        userData.put("tipo", tipoUsuario);
+        userData.put("fecha_nacimiento", empleado.getFechaNacimiento());
+        userData.put("perfil_img", empleado.getPerfilEmpleadoImg());
+        userData.put("access_token", accessToken);
+        userData.put("refresh_token", refreshToken);
+        userData.put("token_type", "Bearer");
+        userData.put("expires_in", jwtTokenProvider.getExpirationInSeconds());
+
+        System.out.println("8. ✅ Respuesta preparada exitosamente");
+        System.out.println("==========================================\n");
+        
+        return ResponseEntity.ok(new LoginResponse(true, "Login exitoso", userData));
+    }
+    
+    // =====================================================
+    // ENDPOINTS DE REGISTRO LEGACY (Integrados)
+    // =====================================================
+    
+    /**
+     * Endpoint de Registro Legacy (mantiene compatibilidad)
+     * POST /api/auth/register
+     */
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse> registerLegacy(@RequestBody RegisterRequest request) {
+        try {
+            // Validar tipo de usuario
+            if (request.getTipo_usuario() == null || request.getTipo_usuario().trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "El tipo de usuario es requerido"));
+            }
+
+            if ("paciente".equalsIgnoreCase(request.getTipo_usuario())) {
+                return registerPacienteLegacy(request);
+            } else if ("empleado".equalsIgnoreCase(request.getTipo_usuario())) {
+                return registerEmpleadoLegacy(request);
+            } else {
+                return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Tipo de usuario no válido"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponse(false, "Error en el servidor: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Registrar Paciente (formato legacy)
+     */
+    private ResponseEntity<ApiResponse> registerPacienteLegacy(RegisterRequest request) {
+        // Validar campos requeridos
+        if (request.getCedula() == null || request.getPrimer_nombre() == null || 
+            request.getPrimer_apellido() == null || request.getPassword() == null) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, "Campos requeridos faltantes"));
+        }
+
+        // Validar contraseña
+        String passwordError = PasswordValidator.validatePassword(request.getPassword());
+        if (passwordError != null) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, passwordError));
+        }
+
+        // Verificar si ya existe la cédula
+        List<PersonaPaciente> existentes = personaPacienteService.findAll();
+        boolean cedulaExiste = existentes.stream()
+            .anyMatch(p -> request.getCedula().equals(p.getCedula()));
+
+        if (cedulaExiste) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, "La cédula ya está registrada"));
+        }
+
+        // Crear nuevo paciente
+        PersonaPaciente paciente = new PersonaPaciente();
+        paciente.setCedula(request.getCedula());
+        paciente.setPrimerNombre(request.getPrimer_nombre());
+        paciente.setSegundoNombre(request.getSegundo_nombre());
+        paciente.setPrimerApellido(request.getPrimer_apellido());
+        paciente.setSegundoApellido(request.getSegundo_apellido());
+        paciente.setCorreo(request.getCorreo());
+        paciente.setTelefono(request.getTelefono());
+        paciente.setDiscapacidad(request.isDiscapacidad());
+        
+        // Convertir fecha de string a LocalDate
+        if (request.getFecha_nacimiento() != null && !request.getFecha_nacimiento().isEmpty()) {
+            paciente.setFechaNacimiento(LocalDate.parse(request.getFecha_nacimiento()));
+        }
+
+        // Encriptar contraseña
+        paciente.setPassword(passwordEncoder.encode(request.getPassword()));
+        
+        // Configurar valores por defecto para autenticación
+        paciente.setAuthProvider(PersonaPaciente.AuthProvider.LOCAL);
+        paciente.setAccountStatus(PersonaPaciente.AccountStatus.ACTIVE);
+        paciente.setProfileCompleted(true);
+
+        // Guardar
+        personaPacienteService.save(paciente);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(new ApiResponse(true, "Paciente registrado exitosamente"));
+    }
+
+    /**
+     * Registrar Empleado (formato legacy)
+     */
+    private ResponseEntity<ApiResponse> registerEmpleadoLegacy(RegisterRequest request) {
+        // Validar campos requeridos
+        if (request.getCedula() == null || request.getPrimer_nombre() == null || 
+            request.getPrimer_apellido() == null || request.getRol_empleado() == null ||
+            request.getPassword() == null) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, "Campos requeridos faltantes (incluye contraseña)"));
+        }
+
+        // Validar contraseña
+        String passwordError = PasswordValidator.validatePassword(request.getPassword());
+        if (passwordError != null) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, passwordError));
+        }
+
+        // Verificar si ya existe la cédula
+        try {
+            personaEmpleadoService.obtenerPorCedula(request.getCedula());
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, "La cédula ya está registrada"));
+        } catch (RuntimeException e) {
+            // No existe, continuar
+        }
+
+        // Crear nuevo empleado
+        PersonaEmpleado empleado = new PersonaEmpleado();
+        empleado.setCedula(request.getCedula());
+        empleado.setPrimerNombre(request.getPrimer_nombre());
+        empleado.setSegundoNombre(request.getSegundo_nombre());
+        empleado.setPrimerApellido(request.getPrimer_apellido());
+        empleado.setSegundoApellido(request.getSegundo_apellido());
+        empleado.setCorreo(request.getCorreo());
+        empleado.setTelefono(request.getTelefono());
+        
+        // Convertir fecha de string a LocalDate
+        if (request.getFecha_nacimiento() != null && !request.getFecha_nacimiento().isEmpty()) {
+            empleado.setFechaNacimiento(LocalDate.parse(request.getFecha_nacimiento()));
+        }
+
+        // Encriptar contraseña
+        empleado.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        // Asignar rol
+        try {
+            Integer rolId = Integer.parseInt(request.getRol_empleado());
+            var rol = rolesService.obtenerPorId(rolId);
+            empleado.setRol(rol);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(new ApiResponse(false, "Rol no válido"));
+        }
+        
+        // Configurar valores por defecto para autenticación
+        empleado.setAuthProvider(PersonaEmpleado.AuthProvider.LOCAL);
+        empleado.setAccountStatus(PersonaEmpleado.AccountStatus.ACTIVE);
+        empleado.setProfileCompleted(true);
+
+        // Guardar
+        personaEmpleadoService.guardar(empleado);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(new ApiResponse(true, "Empleado registrado exitosamente"));
+    }
+    
+    // =====================================================
+    // ENDPOINT DE HEALTH CHECK
+    // =====================================================
+    
+>>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
     /**
      * Health check del servicio de autenticación
      * GET /api/auth/health
@@ -109,4 +568,21 @@ public class AuthController {
     public ResponseEntity<?> health() {
         return ResponseEntity.ok(new MessageResponse("Authentication service is running", "SUCCESS"));
     }
+<<<<<<< HEAD
 }
+=======
+    
+    @GetMapping("/generate-hash/{password}")
+    public ResponseEntity<?> generateHash(@PathVariable String password) {
+        String hash = passwordEncoder.encode(password);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("password_plain", password);
+        response.put("password_hash", hash);
+        response.put("mensaje", "Copia este hash y úsalo en tu UPDATE SQL");
+        
+        return ResponseEntity.ok(response);
+    }
+    
+}
+>>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)

@@ -2,7 +2,7 @@ package ista.M4A2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 
@@ -29,5 +29,15 @@ public class LactaCareApplication {
 	            }
 	        };
 	    }
-	
-}
+	/** // NO BORRAR ES PARA TENER EL PRIMER USUARIO ADMINISTRADOR
+	 @Bean
+	    public CommandLineRunner imprimirHashPrueba(PasswordEncoder passwordEncoder) {
+	        return args -> {
+	            String passRaw = "12345";
+	            String passHash = passwordEncoder.encode(passRaw);
+	            System.out.println("==========================================");
+	            System.out.println("HASH PARA '12345': " + passHash);
+	            System.out.println("==========================================");
+	         }; 
+	    }*/
+	}

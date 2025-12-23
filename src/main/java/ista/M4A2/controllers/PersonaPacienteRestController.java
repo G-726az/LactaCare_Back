@@ -1,6 +1,7 @@
 package ista.M4A2.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import ista.M4A2.dto.UsuarioResponse;
 import ista.M4A2.models.entity.PersonaPaciente;
 import ista.M4A2.models.services.serv.IPersonaPacienteService;
 import ista.M4A2.verificaciones.PasswordValidator;
@@ -58,6 +60,30 @@ public class PersonaPacienteRestController {
 
 	    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 	}
+	// NUEVO ENDPOINT SEGURO CON DTO
+    @GetMapping("/pacientes/listar-dto")
+    // @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'DOCTOR')") // Descomenta si quieres seguridad
+    public ResponseEntity<List<UsuarioResponse>> listarPacientesDTO() {
+        try {
+            List<PersonaPaciente> pacientes = personaPacienteService.findAll();
+            
+            List<UsuarioResponse> respuesta = pacientes.stream()
+                .map(p -> new UsuarioResponse(
+                    p.getId(),
+                    p.getCedula(),
+                    p.getPrimerNombre() + " " + p.getPrimerApellido(),
+                    p.getCorreo(),
+                    p.getTelefono(),
+                    "PACIENTE", // Texto fijo porque esta tabla solo tiene pacientes
+                    p.getImagenPerfil()
+                ))
+                .collect(Collectors.toList());
+                
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
 	@PutMapping("/pacientes/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
