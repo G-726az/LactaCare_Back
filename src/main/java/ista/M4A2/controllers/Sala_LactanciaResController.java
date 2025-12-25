@@ -41,7 +41,6 @@ public class Sala_LactanciaResController {
         // Lógica de actualización de campos y relaciones
         current.setNombreCMedico(entity.getNombreCMedico());
         current.setDireccionCMedico(entity.getDireccionCMedico());
-        current.setHorario(entity.getHorario()); 
         current.setInstitucion(entity.getInstitucion());
         
         return service.save(current);

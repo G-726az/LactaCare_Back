@@ -1,29 +1,40 @@
 package ista.M4A2.config.authenticator;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ista.M4A2.models.entity.PersonaEmpleado;
 import ista.M4A2.models.entity.PersonaPaciente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
 import ista.M4A2.models.entity.PersonaEmpleado;
 import ista.M4A2.models.entity.PersonaPaciente;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 @RestController
 @RequestMapping("/api/user")
 @CrossOrigin(origins = "*")
 public class UserController {
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	@Autowired
     private PersonaPacienteRepository pacienteRepository;
@@ -113,6 +124,8 @@ class ActualizarPerfilRequest {
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @Autowired private PersonaPacienteRepository pacienteRepository;
     @Autowired private PersonaEmpleadoRepository empleadoRepository;
 
@@ -198,7 +211,10 @@ class UpdateProfileRequest {
     // Getters y Setters
     public String getPrimerNombre() { return primerNombre; }
     public void setPrimerNombre(String primerNombre) { this.primerNombre = primerNombre; }
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     public String getImagenPerfil() { return imagenPerfil; }
     public void setImagenPerfil(String imagenPerfil) { this.imagenPerfil = imagenPerfil; }
 }

@@ -77,10 +77,14 @@
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<version>2.0.30</version>
 =======
 			<version>2.0.33</version>
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+			<version>2.0.33</version>
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -94,10 +98,14 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<version>2.6.0</version>
 =======
 			<version>2.7.0</version>
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+			<version>2.7.0</version>
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 		</dependency>
 
 		<!-- Validation -->

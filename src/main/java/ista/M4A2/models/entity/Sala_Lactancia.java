@@ -35,6 +35,7 @@ public class Sala_Lactancia implements Serializable {
     @Column(name = "Latitud_CMedico") private String latitudCMedico;
     @Column(name = "Longitud_CMedico") private String longitudCMedico;
 
+<<<<<<< HEAD
     // Relaciones (Vuelven a ser LAZY y limpias, como debe ser)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Horario_CMedico", nullable = true)
@@ -51,10 +52,25 @@ public class Sala_Lactancia implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Dias_Laborables diasLaborables;
     
+=======
+    // === RELACIONES ===
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_Institucion")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+    private Institucion institucion;
+    
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @OneToMany(mappedBy = "sala_lactancia", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("sala_lactancia") 
     private List<Refrigerador> refrigeradores;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_horario_sala", nullable = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+    private HorariosSala horarioSala;
 
+<<<<<<< HEAD
     // --- GETTERS Y SETTERS ---
 
     public Long getIdLactario() {
@@ -119,6 +135,77 @@ public class Sala_Lactancia implements Serializable {
 
     public void setHorario(Horarios horario) {
         this.horario = horario;
+=======
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_dia_laborable_sala")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+    private DiasLaborablesSala diasLaborablesSala;
+    
+    @OneToMany(mappedBy = "salaLactancia", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("salaLactancia")
+    private List<PersonaEmpleado> empleados;
+
+    @OneToMany(mappedBy = "salaLactancia", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("salaLactancia")
+    private List<PersonaPaciente> pacientes;
+
+    // --- GETTERS Y SETTERS ---
+
+    public Long getIdLactario() {
+        return idLactario;
+    }
+
+    public void setIdLactario(Long idLactario) {
+        this.idLactario = idLactario;
+    }
+
+    public String getNombreCMedico() {
+        return nombreCMedico;
+    }
+
+    public void setNombreCMedico(String nombreCMedico) {
+        this.nombreCMedico = nombreCMedico;
+    }
+
+    public String getDireccionCMedico() {
+        return direccionCMedico;
+    }
+
+    public void setDireccionCMedico(String direccionCMedico) {
+        this.direccionCMedico = direccionCMedico;
+    }
+
+    public String getCorreoCMedico() {
+        return correoCMedico;
+    }
+
+    public void setCorreoCMedico(String correoCMedico) {
+        this.correoCMedico = correoCMedico;
+    }
+
+    public String getTelefonoCMedico() {
+        return telefonoCMedico;
+    }
+
+    public void setTelefonoCMedico(String telefonoCMedico) {
+        this.telefonoCMedico = telefonoCMedico;
+    }
+
+    public String getLatitudCMedico() {
+        return latitudCMedico;
+    }
+
+    public void setLatitudCMedico(String latitudCMedico) {
+        this.latitudCMedico = latitudCMedico;
+    }
+
+    public String getLongitudCMedico() {
+        return longitudCMedico;
+    }
+
+    public void setLongitudCMedico(String longitudCMedico) {
+        this.longitudCMedico = longitudCMedico;
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     }
 
     public Institucion getInstitucion() {
@@ -129,6 +216,7 @@ public class Sala_Lactancia implements Serializable {
         this.institucion = institucion;
     }
 
+<<<<<<< HEAD
     public Dias_Laborables getDiasLaborables() {
         return diasLaborables;
     }
@@ -146,6 +234,50 @@ public class Sala_Lactancia implements Serializable {
     }
     
     // --- TU MÉTODO RESTAURADO ---
+=======
+    public List<Refrigerador> getRefrigeradores() {
+        return refrigeradores;
+    }
+
+    public void setRefrigeradores(List<Refrigerador> refrigeradores) {
+        this.refrigeradores = refrigeradores;
+    }
+    
+    public List<PersonaEmpleado> getEmpleados() {
+        return empleados;
+    }
+
+    public void setEmpleados(List<PersonaEmpleado> empleados) {
+        this.empleados = empleados;
+    }
+
+    public List<PersonaPaciente> getPacientes() {
+        return pacientes;
+    }
+
+    public void setPacientes(List<PersonaPaciente> pacientes) {
+        this.pacientes = pacientes;
+    }
+    
+    public HorariosSala getHorarioSala() {
+        return horarioSala;
+    }
+
+    public void setHorarioSala(HorariosSala horarioSala) {
+        this.horarioSala = horarioSala;
+    }
+
+    public DiasLaborablesSala getDiasLaborablesSala() {
+        return diasLaborablesSala;
+    }
+
+    public void setDiasLaborablesSala(DiasLaborablesSala diasLaborablesSala) {
+        this.diasLaborablesSala = diasLaborablesSala;
+    }
+    
+    
+    
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     public String aTexto() {
         StringBuilder sb = new StringBuilder();
         
@@ -157,14 +289,19 @@ public class Sala_Lactancia implements Serializable {
             sb.append(", Institución: ").append(institucion.getNombreInstitucion()); 
         }
 
+<<<<<<< HEAD
         if (horario != null) {
             sb.append(", Horario: ").append(horario.obtenerTextoHorario());
+=======
+        if (horarioSala != null) {
+            sb.append(", Horario: ").append(horarioSala.obtenerTextoHorario());
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         } else {
             sb.append(", Horario: No definido");
         }
 
-        if (diasLaborables != null) {
-            sb.append(", Días de Atención: ").append(diasLaborables.obtenerDiasTexto());
+        if (diasLaborablesSala != null) {
+            sb.append(", Días de Atención: ").append(diasLaborablesSala.obtenerDiasTexto());
         } else {
             sb.append(", Días de Atención: No especificado");
         }

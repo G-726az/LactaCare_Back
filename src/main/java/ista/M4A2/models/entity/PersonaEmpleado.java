@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+<<<<<<< HEAD
+=======
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
 @Entity
 @Table(name = "Persona_Empleado")
@@ -23,10 +27,14 @@ public class PersonaEmpleado implements Serializable {
     @Column(name = "Perfil_empleado_img")
     private String perfilEmpleadoImg;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
 
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @Column(name = "Cedula", nullable = false, unique = true, length = 13)
     private String cedula;
 
@@ -42,10 +50,14 @@ public class PersonaEmpleado implements Serializable {
     @Column(name = "Segundo_apellido")
     private String segundoApellido;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
 
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @Column(name = "Correo", unique = true)
     private String correo;
 
@@ -55,6 +67,7 @@ public class PersonaEmpleado implements Serializable {
     @Column(name = "Fechanacimiento")
     private LocalDate fechaNacimiento;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     // ===== CAMPOS DE AUTENTICACIÓN =====
     
@@ -83,6 +96,13 @@ public class PersonaEmpleado implements Serializable {
 
     @Column(name = "Password", length = 100)
     private String password;
+=======
+
+    // ===== CAMPOS DE AUTENTICACIÓN =====
+
+    @Column(name = "Password", length = 100)
+    private String password;
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
     @Column(name = "google_id", unique = true)
     private String googleId;
@@ -100,17 +120,23 @@ public class PersonaEmpleado implements Serializable {
 
     // ===== CAMPOS DE RECUPERACIÓN DE CONTRASEÑA =====
 
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @Column(name = "reset_token")
     private String resetToken;
 
     @Column(name = "token_expiration")
     private LocalDateTime tokenExpiration;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     // ===== RELACIONES =====
     
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
     @Column(name = "require_password_change")
     private Boolean requirePasswordChange = false;
@@ -123,20 +149,27 @@ public class PersonaEmpleado implements Serializable {
 
     // ===== RELACIONES =====
 
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @ManyToOne
     @JoinColumn(name = "Rol_empleado", referencedColumnName = "Id_roles")
     private Roles rol;
 
+<<<<<<< HEAD
     @ManyToMany
     @JoinTable(name = "Empleado_Horarios", joinColumns = @JoinColumn(name = "Id_PerEmpleado"), inverseJoinColumns = @JoinColumn(name = "Id_Horario"))
     private List<Horarios> horarios = new ArrayList<>();
 <<<<<<< HEAD
     
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @JsonIgnore
     @OneToMany(mappedBy = "empleado")
     private List<Atencion> atenciones;
     
+<<<<<<< HEAD
     // ===== ENUMS =====
     
     public enum AuthProvider {
@@ -170,6 +203,38 @@ public class PersonaEmpleado implements Serializable {
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
     public PersonaEmpleado() {
     }
+=======
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_sala_lactancia")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Sala_Lactancia salaLactancia;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_horario_empleado")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private HorariosEmpleado horarioEmpleado;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_dia_laborable_empleado")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private DiasLaborablesEmpleado diasLaborablesEmpleado;
+
+    // ===== ENUMS =====
+
+    public enum AuthProvider {
+        LOCAL, GOOGLE
+    }
+
+    public enum AccountStatus {
+        ACTIVE, SUSPENDED, PENDING, INCOMPLETE
+    }
+
+    // ===== CONSTRUCTORES =====
+
+    public PersonaEmpleado() {
+    }
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
     public PersonaEmpleado(Integer idPerEmpleado, String cedula, String primerNombre,
             String primerApellido, String correo, String telefono,
@@ -183,6 +248,7 @@ public class PersonaEmpleado implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     // ===== GETTERS Y SETTERS =====
     
@@ -191,6 +257,11 @@ public class PersonaEmpleado implements Serializable {
     // ===== GETTERS Y SETTERS =====
 
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+
+    // ===== GETTERS Y SETTERS =====
+
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     public Integer getIdPerEmpleado() {
         return idPerEmpleado;
     }
@@ -279,6 +350,7 @@ public class PersonaEmpleado implements Serializable {
         this.password = password;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     public String getGoogleId() {
         return googleId;
@@ -313,6 +385,8 @@ public class PersonaEmpleado implements Serializable {
     }
     
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
     public String getGoogleId() {
         return googleId;
@@ -346,7 +420,10 @@ public class PersonaEmpleado implements Serializable {
         this.profileCompleted = profileCompleted;
     }
 
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     public String getResetToken() {
         return resetToken;
     }
@@ -371,6 +448,7 @@ public class PersonaEmpleado implements Serializable {
         this.rol = rol;
     }
 
+<<<<<<< HEAD
     public List<Horarios> getHorarios() {
         return horarios;
     }
@@ -379,6 +457,8 @@ public class PersonaEmpleado implements Serializable {
         this.horarios = horarios;
     }
 
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     public List<Atencion> getAtenciones() {
         return atenciones;
     }
@@ -410,4 +490,32 @@ public class PersonaEmpleado implements Serializable {
     public void setResetCodeExpiration(LocalDateTime resetCodeExpiration) {
         this.resetCodeExpiration = resetCodeExpiration;
     }
+<<<<<<< HEAD
+=======
+    
+    public Sala_Lactancia getSalaLactancia() {
+        return salaLactancia;
+    }
+
+    public void setSalaLactancia(Sala_Lactancia salaLactancia) {
+        this.salaLactancia = salaLactancia;
+    }
+    
+    public HorariosEmpleado getHorarioEmpleado() {
+        return horarioEmpleado;
+    }
+
+    public void setHorarioEmpleado(HorariosEmpleado horarioEmpleado) {
+        this.horarioEmpleado = horarioEmpleado;
+    }
+
+    public DiasLaborablesEmpleado getDiasLaborablesEmpleado() {
+        return diasLaborablesEmpleado;
+    }
+
+    public void setDiasLaborablesEmpleado(DiasLaborablesEmpleado diasLaborablesEmpleado) {
+        this.diasLaborablesEmpleado = diasLaborablesEmpleado;
+    }
+    
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 }

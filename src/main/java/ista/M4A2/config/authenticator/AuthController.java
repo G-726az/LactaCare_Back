@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.*;
 
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
@@ -37,7 +43,10 @@ public class AuthController {
     private AuthenticationService authenticationService;
     
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @Autowired
     private IPersonaPacienteService personaPacienteService;
 
@@ -57,11 +66,15 @@ public class AuthController {
     // ENDPOINTS DE GOOGLE OAUTH2 Y JWT (Sistema Nuevo)
     // =====================================================
     
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     /**
      * Login con Google OAuth2
      * POST /api/auth/google
      */
+<<<<<<< HEAD
     @PostMapping("/google")
     public ResponseEntity<?> authenticateWithGoogle(@Valid @RequestBody GoogleAuthRequest request) {
         try {
@@ -95,14 +108,52 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse("INVALID_CREDENTIALS", "Credenciales incorrectas", "/api/auth/login", 401));
+=======
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            String correo = request.getCorreo().trim().toLowerCase();
+            String password = request.getPassword();
+            String tipoUsuario = request.getTipoUsuario();
+
+            // Validaciones básicas
+            if (correo == null || correo.isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(new LoginResponse(false, "El correo es requerido", null));
+            }
+
+            if (password == null || password.isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(new LoginResponse(false, "La contraseña es requerida", null));
+            }
+
+            // Buscar según el tipo de usuario
+            if ("PACIENTE".equalsIgnoreCase(tipoUsuario)) {
+                return loginPacienteUnificado(correo, password);
+            } else if ("MEDICO".equalsIgnoreCase(tipoUsuario) || "ADMINISTRADOR".equalsIgnoreCase(tipoUsuario)) {
+                return loginEmpleadoUnificado(correo, password, tipoUsuario);
+            } else {
+                return ResponseEntity.badRequest()
+                    .body(new LoginResponse(false, "Tipo de usuario no válido", null));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new LoginResponse(false, "Error en el servidor: " + e.getMessage(), null));
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
     }
     
     /**
+<<<<<<< HEAD
      * Registro de nuevo paciente
 =======
      * Registro de nuevo paciente con JWT
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+     * Registro de nuevo paciente con JWT
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
      * POST /api/auth/register/paciente
      */
     @PostMapping("/register/paciente")
@@ -118,10 +169,14 @@ public class AuthController {
     
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Registro de nuevo empleado (Doctor/Admin)
 =======
      * Registro de nuevo empleado (Doctor/Admin) con JWT
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+     * Registro de nuevo empleado (Doctor/Admin) con JWT
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
      * POST /api/auth/register/empleado
      */
     @PostMapping("/register/empleado")
@@ -154,12 +209,16 @@ public class AuthController {
     }
     
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     // =====================================================
     // ENDPOINTS DE LOGIN TRADICIONAL (Sistema Legacy Integrado)
     // =====================================================
     
     /**
+<<<<<<< HEAD
      * Login tradicional con cédula y password (UNIFICADO)
      * Soporta tanto el formato nuevo (JWT) como el formato legacy
      * POST /api/auth/login
@@ -207,18 +266,36 @@ public class AuthController {
         List<PersonaPaciente> pacientes = personaPacienteService.findAll();
         PersonaPaciente paciente = pacientes.stream()
             .filter(p -> cedula.equals(p.getCedula()))
+=======
+     * Login unificado para Pacientes (con JWT)
+     * Acepta cédula o correo electrónico
+     */
+    private ResponseEntity<LoginResponse> loginPacienteUnificado(String correo, String password) {
+        // Buscar paciente por correo
+        List<PersonaPaciente> pacientes = personaPacienteService.findAll();
+        PersonaPaciente paciente = pacientes.stream()
+            .filter(p -> correo.equalsIgnoreCase(p.getCorreo()))
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
             .findFirst()
             .orElse(null);
 
         if (paciente == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+<<<<<<< HEAD
                 .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+=======
+                .body(new LoginResponse(false, "Correo o contraseña incorrecta", null));
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
 
         // Verificar contraseña
         if (!passwordEncoder.matches(password, paciente.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+<<<<<<< HEAD
                 .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+=======
+                .body(new LoginResponse(false, "Correo o contraseña incorrecta", null));
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
 
         // Generar JWT Token
@@ -238,21 +315,31 @@ public class AuthController {
         Map<String, Object> userData = new HashMap<>();
         userData.put("id", paciente.getId());
         userData.put("cedula", paciente.getCedula());
+<<<<<<< HEAD
+=======
+        userData.put("correo", paciente.getCorreo());
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         userData.put("nombre_completo", paciente.getPrimerNombre() + " " + 
             (paciente.getSegundoNombre() != null ? paciente.getSegundoNombre() + " " : "") +
             paciente.getPrimerApellido() + " " +
             (paciente.getSegundoApellido() != null ? paciente.getSegundoApellido() : ""));
         userData.put("primer_nombre", paciente.getPrimerNombre());
         userData.put("primer_apellido", paciente.getPrimerApellido());
+<<<<<<< HEAD
         userData.put("correo", paciente.getCorreo());
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         userData.put("telefono", paciente.getTelefono());
         userData.put("rol", "PACIENTE");
         userData.put("rol_id", 6);
         userData.put("tipo", "PACIENTE");
         userData.put("fecha_nacimiento", paciente.getFechaNacimiento());
         userData.put("perfil_img", paciente.getImagenPerfil());
+<<<<<<< HEAD
         
         // AGREGAR TOKENS JWT
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         userData.put("access_token", accessToken);
         userData.put("refresh_token", refreshToken);
         userData.put("token_type", "Bearer");
@@ -263,6 +350,7 @@ public class AuthController {
 
     /**
      * Login unificado para Empleados (Médicos/Administradores) con JWT
+<<<<<<< HEAD
      */
     private ResponseEntity<LoginResponse> loginEmpleadoUnificado(String cedula, String password, String tipoUsuario) {
         System.out.println("\n========== DEBUG LOGIN EMPLEADO ==========");
@@ -278,15 +366,41 @@ public class AuthController {
             System.out.println("   - ID: " + empleado.getIdPerEmpleado());
             System.out.println("   - Nombre: " + empleado.getPrimerNombre() + " " + empleado.getPrimerApellido());
             System.out.println("   - Cédula en BD: [" + empleado.getCedula() + "]");
+=======
+     * Acepta cédula o correo electrónico
+     */
+    private ResponseEntity<LoginResponse> loginEmpleadoUnificado(String correo, String password, String tipoUsuario) {
+        System.out.println("\n========== DEBUG LOGIN EMPLEADO ==========");
+        System.out.println("1. Correo recibido: [" + correo + "]");
+        System.out.println("2. Password recibida: [" + password + "]");
+        System.out.println("3. Tipo usuario recibido: [" + tipoUsuario + "]");
+        
+        // Buscar empleado por correo
+        PersonaEmpleado empleado = null;
+        try {
+            empleado = personaEmpleadoService.obtenerPorCorreo(correo);
+            System.out.println("4. ✅ Empleado encontrado:");
+            System.out.println("   - ID: " + empleado.getIdPerEmpleado());
+            System.out.println("   - Nombre: " + empleado.getPrimerNombre() + " " + empleado.getPrimerApellido());
+            System.out.println("   - Correo en BD: [" + empleado.getCorreo() + "]");
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
             System.out.println("   - Rol ID: " + (empleado.getRol() != null ? empleado.getRol().getIdRoles() : "NULL"));
             System.out.println("   - Rol Nombre: " + (empleado.getRol() != null ? empleado.getRol().getNombreRol() : "NULL"));
             
         } catch (RuntimeException e) {
+<<<<<<< HEAD
             System.out.println("4. ❌ ERROR: No se encontró empleado con cédula: " + cedula);
             System.out.println("   Excepción: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+=======
+            System.out.println("4. ❌ ERROR: No se encontró empleado con correo: " + correo);
+            System.out.println("   Excepción: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(false, "Correo o contraseña incorrecta", null));
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
 
         // Verificar que el rol coincida con el tipo de usuario solicitado
@@ -299,8 +413,13 @@ public class AuthController {
         
         if ("ADMINISTRADOR".equalsIgnoreCase(tipoUsuario)) {
             System.out.println("   - Validando rol de ADMINISTRADOR...");
+<<<<<<< HEAD
             if (rolId == null || rolId != 1) {
                 System.out.println("   ❌ RECHAZADO: Se esperaba rol_id=1, pero tiene rol_id=" + rolId);
+=======
+            if (rolId == null || (rolId != 1 && rolId != 3)) { // Permitir ID 1 o 3
+                System.out.println("   ❌ RECHAZADO: Se esperaba rol_id=1 o 3, pero tiene rol_id=" + rolId);
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new LoginResponse(false, "No tienes permisos de administrador", null));
             }
@@ -319,9 +438,12 @@ public class AuthController {
 
         // Verificar contraseña
         System.out.println("6. Verificando contraseña...");
+<<<<<<< HEAD
         System.out.println("   - Password ingresada: [" + password + "]");
         System.out.println("   - Password ingresada length: " + password.length());
         System.out.println("   - Password ingresada bytes: " + java.util.Arrays.toString(password.getBytes()));
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         
         if (empleado.getPassword() == null || empleado.getPassword().isEmpty()) {
             System.out.println("   ❌ ERROR: Usuario sin contraseña en BD");
@@ -329,6 +451,7 @@ public class AuthController {
                 .body(new LoginResponse(false, "Usuario sin contraseña configurada. Contacte al administrador", null));
         }
         
+<<<<<<< HEAD
         System.out.println("   - Hash en BD: " + empleado.getPassword());
         System.out.println("   - Hash length: " + empleado.getPassword().length());
         System.out.println("   - Hash empieza con $2a$: " + empleado.getPassword().startsWith("$2a$"));
@@ -343,12 +466,20 @@ public class AuthController {
             System.out.println("   ❌ EXCEPCIÓN al verificar password:");
             e.printStackTrace();
         }
+=======
+        boolean passwordMatch = passwordEncoder.matches(password, empleado.getPassword());
+        System.out.println("   - passwordEncoder.matches() resultado: " + passwordMatch);
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         
         if (!passwordMatch) {
             System.out.println("   ❌ CONTRASEÑA INCORRECTA");
             System.out.println("==========================================\n");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+<<<<<<< HEAD
                 .body(new LoginResponse(false, "Cédula o contraseña incorrecta", null));
+=======
+                .body(new LoginResponse(false, "Correo o contraseña incorrecta", null));
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
         
         System.out.println("   ✅ CONTRASEÑA CORRECTA");
@@ -371,13 +502,20 @@ public class AuthController {
         Map<String, Object> userData = new HashMap<>();
         userData.put("id", empleado.getIdPerEmpleado());
         userData.put("cedula", empleado.getCedula());
+<<<<<<< HEAD
+=======
+        userData.put("correo", empleado.getCorreo());
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         userData.put("nombre_completo", empleado.getPrimerNombre() + " " + 
             (empleado.getSegundoNombre() != null ? empleado.getSegundoNombre() + " " : "") +
             empleado.getPrimerApellido() + " " +
             (empleado.getSegundoApellido() != null ? empleado.getSegundoApellido() : ""));
         userData.put("primer_nombre", empleado.getPrimerNombre());
         userData.put("primer_apellido", empleado.getPrimerApellido());
+<<<<<<< HEAD
         userData.put("correo", empleado.getCorreo());
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         userData.put("telefono", empleado.getTelefono());
         userData.put("rol", rolNombre);
         userData.put("rol_id", empleado.getRol().getIdRoles());
@@ -559,7 +697,10 @@ public class AuthController {
     // ENDPOINT DE HEALTH CHECK
     // =====================================================
     
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     /**
      * Health check del servicio de autenticación
      * GET /api/auth/health
@@ -569,8 +710,11 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Authentication service is running", "SUCCESS"));
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     
     @GetMapping("/generate-hash/{password}")
     public ResponseEntity<?> generateHash(@PathVariable String password) {
@@ -584,5 +728,9 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
     
+<<<<<<< HEAD
 }
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+}
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)

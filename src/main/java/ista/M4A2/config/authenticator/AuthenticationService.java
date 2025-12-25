@@ -1,12 +1,18 @@
 package ista.M4A2.config.authenticator;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ista.M4A2.models.entity.*;
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
 import ista.M4A2.config.AuthException;
 import ista.M4A2.models.entity.*;
 import ista.M4A2.dto.*;
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,9 +27,13 @@ import com.google.api.client.json.gson.GsonFactory;
 
 import java.time.LocalDate;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import java.time.Period;
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+import java.time.Period;
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -32,10 +42,14 @@ import java.util.Optional;
 public class AuthenticationService {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@Autowired
 =======
     @Autowired
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+    @Autowired
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     private PersonaPacienteRepository pacienteRepository;
     
     @Autowired
@@ -54,27 +68,39 @@ public class AuthenticationService {
     private PasswordEncoder passwordEncoder;
     
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     @Autowired
     private ista.M4A2.models.services.impl.EmailService emailService;
     
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+    @Autowired
+    private ista.M4A2.models.services.impl.EmailService emailService;
+    
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     @Value("${google.auth.valid-audiences}")
     private String validAudiences;
     
     private GoogleIdTokenVerifier verifier;
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     /**
      * Inicializa el verificador de tokens de Google
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     // ========================================================================
     // INICIALIZACIÓN
     // ========================================================================
     
     /**
      * Inicializa el verificador de tokens de Google (Singleton pattern)
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
      */
     private GoogleIdTokenVerifier getVerifier() {
         if (verifier == null) {
@@ -87,9 +113,12 @@ public class AuthenticationService {
     }
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     /**
      * Autentica con Google OAuth2
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     // ========================================================================
     // AUTENTICACIÓN - LOGIN TRADICIONAL
     // ========================================================================
@@ -136,7 +165,10 @@ public class AuthenticationService {
     
     /**
      * Autentica con Google OAuth2 con lógica de vinculación inteligente
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
      */
     @Transactional
     public Object authenticateWithGoogle(GoogleAuthRequest request) throws Exception {
@@ -145,24 +177,33 @@ public class AuthenticationService {
         
         if (idToken == null) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             throw new RuntimeException("Token de Google inválido");
 =======
             throw new AuthException("GOOGLE_TOKEN_INVALIDO", "Token de Google no válido.");
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+            throw new AuthException("GOOGLE_TOKEN_INVALIDO", "Token de Google no válido.");
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
         
         Payload payload = idToken.getPayload();
         String googleId = payload.getSubject();
+<<<<<<< HEAD
 <<<<<<< HEAD
         String email = payload.getEmail();
         String name = (String) payload.get("name");
 =======
         String email = payload.getEmail().toLowerCase();
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+        String email = payload.getEmail().toLowerCase();
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         String givenName = (String) payload.get("given_name");
         String familyName = (String) payload.get("family_name");
         String pictureUrl = (String) payload.get("picture");
         
+<<<<<<< HEAD
 <<<<<<< HEAD
         // 2. Buscar usuario por google_id
         Optional<PersonaPaciente> pacienteOpt = pacienteRepository.findByGoogleId(googleId);
@@ -174,17 +215,23 @@ public class AuthenticationService {
             if (!paciente.getProfileCompleted()) {
                 return createProfileIncompleteResponse(googleId, email, name, givenName, familyName, pictureUrl);
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         // 2. Buscar usuario por google_id (Ya vinculados previamente)
         Optional<PersonaPaciente> pacienteGoogle = pacienteRepository.findByGoogleId(googleId);
         if (pacienteGoogle.isPresent()) {
             PersonaPaciente paciente = pacienteGoogle.get();
             if (!paciente.getProfileCompleted()) {
                 return createProfileIncompleteResponse(googleId, email, givenName, familyName, pictureUrl);
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
             }
             return createAuthResponse(paciente);
         }
         
+<<<<<<< HEAD
 <<<<<<< HEAD
         if (empleadoOpt.isPresent()) {
             PersonaEmpleado empleado = empleadoOpt.get();
@@ -202,6 +249,8 @@ public class AuthenticationService {
             paciente.setAuthProvider(PersonaPaciente.AuthProvider.GOOGLE);
             if (pictureUrl != null) {
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         Optional<PersonaEmpleado> empleadoGoogle = empleadoRepository.findByGoogleId(googleId);
         if (empleadoGoogle.isPresent()) {
             PersonaEmpleado empleado = empleadoGoogle.get();
@@ -218,13 +267,17 @@ public class AuthenticationService {
             paciente.setGoogleId(googleId);
             paciente.setAuthProvider(PersonaPaciente.AuthProvider.GOOGLE);
             if (paciente.getImagenPerfil() == null) {
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
                 paciente.setImagenPerfil(pictureUrl);
             }
             pacienteRepository.save(paciente);
             return createAuthResponse(paciente);
         }
         
+<<<<<<< HEAD
 <<<<<<< HEAD
         Optional<PersonaEmpleado> empleadoPorEmail = empleadoRepository.findByCorreo(email);
         if (empleadoPorEmail.isPresent()) {
@@ -290,6 +343,8 @@ public class AuthenticationService {
             empleadoRepository.existsByCorreo(request.getCorreo())) {
             throw new RuntimeException("El correo ya está registrado en el sistema");
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         // B. Intentar vincular con Empleado existente
         Optional<PersonaEmpleado> empleadoEmail = empleadoRepository.findByCorreo(email);
         if (empleadoEmail.isPresent()) {
@@ -335,16 +390,22 @@ public class AuthenticationService {
             empleadoRepository.existsByCorreo(request.getCorreo())) {
             throw new AuthException("CORREO_DUPLICADO", 
                     "El correo ya está registrado en el sistema.");
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
         
         if (pacienteRepository.existsByCedula(request.getCedula()) || 
             empleadoRepository.existsByCedula(request.getCedula())) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             throw new RuntimeException("La cédula ya está registrada");
         }
         
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
             throw new AuthException("CEDULA_DUPLICADA", 
                     "La cédula ya está registrada en el sistema.");
         }
@@ -357,13 +418,17 @@ public class AuthenticationService {
         }
         
         // 3. Crear paciente
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         PersonaPaciente paciente = new PersonaPaciente();
         paciente.setCedula(request.getCedula());
         paciente.setPrimerNombre(request.getPrimerNombre());
         paciente.setSegundoNombre(request.getSegundoNombre());
         paciente.setPrimerApellido(request.getPrimerApellido());
         paciente.setSegundoApellido(request.getSegundoApellido());
+<<<<<<< HEAD
 <<<<<<< HEAD
         paciente.setCorreo(request.getCorreo());
         paciente.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -381,6 +446,8 @@ public class AuthenticationService {
         paciente.setAccountStatus(PersonaPaciente.AccountStatus.ACTIVE);
         paciente.setProfileCompleted(true);
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         paciente.setCorreo(request.getCorreo().toLowerCase());
         paciente.setPassword(passwordEncoder.encode(request.getPassword()));
         paciente.setTelefono(request.getTelefono());
@@ -396,7 +463,10 @@ public class AuthenticationService {
         paciente.setAuthProvider(PersonaPaciente.AuthProvider.LOCAL);
         paciente.setProfileCompleted(true);
         paciente.setAccountStatus(PersonaPaciente.AccountStatus.ACTIVE);
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         
         paciente = pacienteRepository.save(paciente);
         return createAuthResponse(paciente);
@@ -404,12 +474,15 @@ public class AuthenticationService {
     
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Registrar empleado con código
      */
     @Transactional
     public AuthResponse registerEmpleado(RegisterEmpleadoRequest request) {
         // Validar código (mantener igual)
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
      * Completar perfil de paciente (post-Google)
      */
     @Transactional
@@ -466,33 +539,47 @@ public class AuthenticationService {
     @Transactional
     public AuthResponse registerEmpleado(RegisterEmpleadoRequest request) {
         // Validar código de credencial
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         CredentialCode credentialCode = credentialCodeRepository
                 .findByCodeAndIsActive(request.getCodigoCredencial(), true)
                 .orElseThrow(() -> new RuntimeException("Código de credenciales inválido"));
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         // VALIDACIÓN CRUZADA: Buscar en ambas tablas
         if (empleadoRepository.existsByCorreo(request.getCorreo()) || 
             pacienteRepository.existsByCorreo(request.getCorreo())) {
             throw new RuntimeException("El correo ya está registrado en el sistema");
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         // Validación cruzada
         if (empleadoRepository.existsByCorreo(request.getCorreo()) || 
             pacienteRepository.existsByCorreo(request.getCorreo())) {
             throw new AuthException("CORREO_DUPLICADO", 
                     "El correo ya está registrado en el sistema.");
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
         
         if (empleadoRepository.existsByCedula(request.getCedula()) || 
             pacienteRepository.existsByCedula(request.getCedula())) {
+<<<<<<< HEAD
 <<<<<<< HEAD
             throw new RuntimeException("La cédula ya está registrada");
 =======
             throw new AuthException("CEDULA_DUPLICADA", 
                     "La cédula ya está registrada en el sistema.");
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+            throw new AuthException("CEDULA_DUPLICADA", 
+                    "La cédula ya está registrada en el sistema.");
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
         
         PersonaEmpleado empleado = new PersonaEmpleado();
@@ -502,10 +589,14 @@ public class AuthenticationService {
         empleado.setPrimerApellido(request.getPrimerApellido());
         empleado.setSegundoApellido(request.getSegundoApellido());
 <<<<<<< HEAD
+<<<<<<< HEAD
         empleado.setCorreo(request.getCorreo());
 =======
         empleado.setCorreo(request.getCorreo().toLowerCase());
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+        empleado.setCorreo(request.getCorreo().toLowerCase());
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         empleado.setPassword(passwordEncoder.encode(request.getPassword()));
         empleado.setTelefono(request.getTelefono());
         
@@ -523,16 +614,21 @@ public class AuthenticationService {
         empleado = empleadoRepository.save(empleado);
         
 <<<<<<< HEAD
+<<<<<<< HEAD
         // Incrementar contador
 =======
         // Incrementar contador de usos del código
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+        // Incrementar contador de usos del código
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         credentialCode.setCurrentUses(credentialCode.getCurrentUses() + 1);
         credentialCodeRepository.save(credentialCode);
         
         return createAuthResponse(empleado);
     }
     
+<<<<<<< HEAD
 <<<<<<< HEAD
     @Transactional
     public AuthResponse completeProfile(CompleteProfileRequest request) {
@@ -586,6 +682,8 @@ public class AuthenticationService {
         );
         String refreshToken = jwtTokenProvider.generateRefreshToken(paciente.getId(), "PACIENTE");
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     /**
      * Crear empleado por administrador con contraseña temporal
      */
@@ -798,7 +896,10 @@ public class AuthenticationService {
                 paciente.getId(), 
                 "PACIENTE"
         );
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         
         UserInfo userInfo = new UserInfo(
                 paciente.getId(),
@@ -810,6 +911,7 @@ public class AuthenticationService {
                 paciente.getProfileCompleted()
         );
         
+<<<<<<< HEAD
 <<<<<<< HEAD
         return new AuthResponse(accessToken, refreshToken, 
                 jwtTokenProvider.getExpirationInSeconds(), userInfo);
@@ -823,6 +925,8 @@ public class AuthenticationService {
         String refreshToken = jwtTokenProvider.generateRefreshToken(
                 empleado.getIdPerEmpleado().longValue(), "EMPLEADO");
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         return new AuthResponse(
                 accessToken, 
                 refreshToken, 
@@ -846,7 +950,10 @@ public class AuthenticationService {
                 empleado.getIdPerEmpleado().longValue(), 
                 "EMPLEADO"
         );
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         
         UserInfo userInfo = new UserInfo(
                 empleado.getIdPerEmpleado().longValue(),
@@ -858,6 +965,7 @@ public class AuthenticationService {
                 empleado.getProfileCompleted()
         );
         
+<<<<<<< HEAD
 <<<<<<< HEAD
         return new AuthResponse(accessToken, refreshToken, 
                 jwtTokenProvider.getExpirationInSeconds(), userInfo);
@@ -952,6 +1060,8 @@ public class AuthenticationService {
         
         return createAuthResponse(saved);
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         return new AuthResponse(
                 accessToken, 
                 refreshToken, 
@@ -987,6 +1097,9 @@ public class AuthenticationService {
                 googleData, 
                 requiredFields
         );
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     }
 }

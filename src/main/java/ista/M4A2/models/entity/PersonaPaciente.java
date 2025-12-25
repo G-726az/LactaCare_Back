@@ -15,6 +15,7 @@ public class PersonaPaciente implements Serializable {
 
     private static final long serialVersionUID = 1L;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -299,6 +300,84 @@ public class PersonaPaciente implements Serializable {
     @JsonIgnoreProperties("personaPaciente")
     private List<Reserva> reservas;
 
+=======
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "cedula", unique = true, length = 13)
+    private String cedula;
+
+    @Column(name = "imagen_perfil")
+    private String imagenPerfil;
+
+    @Column(name = "primer_nombre", length = 50)
+    private String primerNombre;
+
+    @Column(name = "segundo_nombre", length = 50)
+    private String segundoNombre;
+
+    @Column(name = "primer_apellido", length = 50)
+    private String primerApellido;
+
+    @Column(name = "segundo_apellido", length = 50)
+    private String segundoApellido;
+
+    @Column(name = "correo", unique = true, length = 100)
+    private String correo;
+
+    @Column(name = "telefono", length = 15)
+    private String telefono;
+
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
+    @Column(name = "discapacidad", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean discapacidad;
+
+    // ===== CAMPOS DE AUTENTICACIÓN =====
+
+    @Column(name = "password", length = 100)
+    private String password;
+
+    @Column(name = "google_id", unique = true)
+    private String googleId;
+
+    @Column(name = "auth_provider", length = 20)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    @Column(name = "account_status", length = 20)
+    @Enumerated(EnumType.STRING)
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
+
+    @Column(name = "profile_completed")
+    private Boolean profileCompleted = false;
+
+    // ===== CAMPOS DE RECUPERACIÓN DE CONTRASEÑA =====
+
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "token_expiration")
+    private LocalDateTime tokenExpiration;
+
+    @Column(name = "reset_code", length = 6)
+    private String resetCode;
+
+    @Column(name = "reset_code_expiration")
+    private LocalDateTime resetCodeExpiration;
+
+    // ===== RELACIONES =====
+
+    // Unión con la entidad Reservas, una PersonaPaciente puede tener varias
+    // Reservas
+    @OneToMany(mappedBy = "personaPaciente")
+    @JsonIgnoreProperties("personaPaciente")
+    private List<Reserva> reservas;
+
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     // Unión con la entidad ContactoEmergencia, una PersonaPaciente puede tener
     // varios Contactos de Emergencia
     @OneToMany(mappedBy = "personaPaciente", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -439,7 +518,10 @@ public class PersonaPaciente implements Serializable {
         return accountStatus;
     }
 
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
     }
@@ -451,6 +533,7 @@ public class PersonaPaciente implements Serializable {
     public void setProfileCompleted(Boolean profileCompleted) {
         this.profileCompleted = profileCompleted;
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
     
     public String getResetToken() {
@@ -466,6 +549,8 @@ public class PersonaPaciente implements Serializable {
     }
     
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
     public String getResetToken() {
         return resetToken;
@@ -479,7 +564,10 @@ public class PersonaPaciente implements Serializable {
         return tokenExpiration;
     }
 
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     public void setTokenExpiration(LocalDateTime tokenExpiration) {
         this.tokenExpiration = tokenExpiration;
     }
@@ -508,7 +596,10 @@ public class PersonaPaciente implements Serializable {
         this.lactantes = lactantes;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 
     public String getResetCode() {
         return resetCode;
@@ -525,5 +616,22 @@ public class PersonaPaciente implements Serializable {
     public void setResetCodeExpiration(LocalDateTime resetCodeExpiration) {
         this.resetCodeExpiration = resetCodeExpiration;
     }
+<<<<<<< HEAD
 >>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
+=======
+
+    public Sala_Lactancia getSalaLactancia() {
+        return salaLactancia;
+    }
+
+    public void setSalaLactancia(Sala_Lactancia salaLactancia) {
+        this.salaLactancia = salaLactancia;
+    }
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_sala_lactancia")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Sala_Lactancia salaLactancia;
+    
+>>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 }
