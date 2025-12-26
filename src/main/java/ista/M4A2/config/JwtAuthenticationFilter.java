@@ -1,13 +1,6 @@
 package ista.M4A2.config;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import ista.M4A2.config.authenticator.JwtTokenProvider;
->>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
-=======
-import ista.M4A2.config.authenticator.JwtTokenProvider;
->>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,47 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-<<<<<<< HEAD
-<<<<<<< HEAD
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import ista.M4A2.config.authenticator.JwtTokenProvider; 
-
-import java.io.IOException;
-import java.util.Collections;
-
-@Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;  
-    
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
-                                  FilterChain filterChain) throws ServletException, IOException {
-        
-        try {
-            String jwt = getJwtFromRequest(request);
-            
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
-                String userType = jwtTokenProvider.getUserTypeFromToken(jwt);
-                String rol = jwtTokenProvider.getRolFromToken(jwt);
-                String correo = jwtTokenProvider.getCorreoFromToken(jwt);
-                
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        correo, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol))
-                );
-                
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (Exception ex) {
-            logger.error("No se pudo establecer la autenticación del usuario en el contexto de seguridad", ex);
-=======
-=======
->>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -140,28 +92,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             // Log del error (en producción usar un logger apropiado)
             System.err.println("Error al procesar token JWT: " + e.getMessage());
-<<<<<<< HEAD
->>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
-=======
->>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
         }
         
         filterChain.doFilter(request, response);
     }
     
-<<<<<<< HEAD
-<<<<<<< HEAD
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
-}
-=======
-=======
->>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)
     /**
      * Extrae el token JWT del header Authorization
      */
@@ -191,9 +126,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         return false;
     }
-<<<<<<< HEAD
 }
->>>>>>> 5ba0463 (Actualización backend: mejoras en controladores y modelos. Login y autenticaciones)
-=======
-}
->>>>>>> ddd2387 (relacion entre empleados y pacientes con sala_lactancia: separacion de horaio y dias laborables para empleados y sala_Lactancia; Modificacion de authcontroller y login R-R para inicio con correo (Solicitado), pendiente arreglo de service e imnplements 251225)

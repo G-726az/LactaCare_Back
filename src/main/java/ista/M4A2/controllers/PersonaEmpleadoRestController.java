@@ -116,6 +116,17 @@ public class PersonaEmpleadoRestController {
             empleadoExistente.setFechaNacimiento(empleado.getFechaNacimiento());
             empleadoExistente.setRol(empleado.getRol());
             
+            // Actualizar nuevas relaciones
+            if (empleado.getSalaLactancia() != null) {
+                empleadoExistente.setSalaLactancia(empleado.getSalaLactancia());
+            }
+            if (empleado.getHorarioEmpleado() != null) {
+                empleadoExistente.setHorarioEmpleado(empleado.getHorarioEmpleado());
+            }
+            if (empleado.getDiasLaborablesEmpleado() != null) {
+                empleadoExistente.setDiasLaborablesEmpleado(empleado.getDiasLaborablesEmpleado());
+            }
+            
             // Actualizar contraseña si se proporciona una nueva
             if (empleado.getPassword() != null && !empleado.getPassword().isEmpty()) {
                 String passwordError = PasswordValidator.validatePassword(empleado.getPassword());
@@ -139,34 +150,6 @@ public class PersonaEmpleadoRestController {
         try {
             empleadoService.eliminar(id);
             return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-    
-    @PostMapping("/{idEmpleado}/horarios/{idHorario}")
-    public ResponseEntity<PersonaEmpleado> asignarHorario(
-            @PathVariable Integer idEmpleado, 
-            @PathVariable Integer idHorario) {
-        try {
-            PersonaEmpleado empleado = empleadoService.asignarHorario(idEmpleado, idHorario);
-            return ResponseEntity.ok(empleado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-    
-    @DeleteMapping("/{idEmpleado}/horarios/{idHorario}")
-    public ResponseEntity<PersonaEmpleado> removerHorario(
-            @PathVariable Integer idEmpleado, 
-            @PathVariable Integer idHorario) {
-        try {
-            PersonaEmpleado empleado = empleadoService.removerHorario(idEmpleado, idHorario);
-            return ResponseEntity.ok(empleado);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {

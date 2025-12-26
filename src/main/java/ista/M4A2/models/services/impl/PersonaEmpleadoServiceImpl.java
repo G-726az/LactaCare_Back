@@ -1,8 +1,6 @@
 package ista.M4A2.models.services.impl;
 
-import ista.M4A2.models.dao.HorariosDao;
 import ista.M4A2.models.dao.PersonaEmpleadoDao;
-import ista.M4A2.models.entity.Horarios;
 import ista.M4A2.models.entity.PersonaEmpleado;
 import ista.M4A2.models.services.serv.PersonaEmpleadoService;
 
@@ -17,9 +15,6 @@ public class PersonaEmpleadoServiceImpl implements PersonaEmpleadoService {
     
     @Autowired
     private PersonaEmpleadoDao empleadoDao;
-    
-    @Autowired
-    private HorariosDao horariosDao;
     
     @Override
     @Transactional(readOnly = true)
@@ -74,6 +69,18 @@ public class PersonaEmpleadoServiceImpl implements PersonaEmpleadoService {
         empleadoExistente.setTelefono(empleado.getTelefono());
         empleadoExistente.setFechaNacimiento(empleado.getFechaNacimiento());
         empleadoExistente.setRol(empleado.getRol());
+        
+        // Actualizar las nuevas relaciones
+        if (empleado.getSalaLactancia() != null) {
+            empleadoExistente.setSalaLactancia(empleado.getSalaLactancia());
+        }
+        if (empleado.getHorarioEmpleado() != null) {
+            empleadoExistente.setHorarioEmpleado(empleado.getHorarioEmpleado());
+        }
+        if (empleado.getDiasLaborablesEmpleado() != null) {
+            empleadoExistente.setDiasLaborablesEmpleado(empleado.getDiasLaborablesEmpleado());
+        }
+        
         return empleadoDao.save(empleadoExistente);
     }
     
@@ -82,31 +89,6 @@ public class PersonaEmpleadoServiceImpl implements PersonaEmpleadoService {
     public void eliminar(Integer id) {
         PersonaEmpleado empleado = obtenerPorId(id);
         empleadoDao.delete(empleado);
-    }
-    
-    @Override
-    @Transactional
-    public PersonaEmpleado asignarHorario(Integer idEmpleado, Integer idHorario) {
-        PersonaEmpleado empleado = obtenerPorId(idEmpleado);
-        Horarios horario = horariosDao.findById(idHorario)
-                .orElseThrow(() -> new RuntimeException("Horario no encontrado con ID: " + idHorario));
-        
-        if (!empleado.getHorarios().contains(horario)) {
-            empleado.getHorarios().add(horario);
-            return empleadoDao.save(empleado);
-        }
-        return empleado;
-    }
-    
-    @Override
-    @Transactional
-    public PersonaEmpleado removerHorario(Integer idEmpleado, Integer idHorario) {
-        PersonaEmpleado empleado = obtenerPorId(idEmpleado);
-        Horarios horario = horariosDao.findById(idHorario)
-                .orElseThrow(() -> new RuntimeException("Horario no encontrado con ID: " + idHorario));
-        
-        empleado.getHorarios().remove(horario);
-        return empleadoDao.save(empleado);
     }
     
     @Override
