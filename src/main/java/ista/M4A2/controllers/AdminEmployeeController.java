@@ -7,7 +7,7 @@ import ista.M4A2.models.services.serv.RolesService;
 import jakarta.validation.Valid;
 import ista.M4A2.config.authenticator.JwtTokenProvider;
 import ista.M4A2.config.authenticator.PersonaEmpleadoRepository;
-import ista.M4A2.config.authenticator.PersonaPacienteRepository; // Importante para validar cruce
+import ista.M4A2.config.authenticator.PersonaPacienteRepository;
 import ista.M4A2.dto.CambiarPasswordInicialRequest;
 import ista.M4A2.dto.CrearEmpleadoRequest;
 
@@ -161,7 +161,7 @@ public class AdminEmployeeController {
     public ResponseEntity<List<UsuarioResponse>> listarAdministradores() {
         try {
             // ID Rol Administrador = 3
-            List<PersonaEmpleado> admins = empleadoService.obtenerPorRol(3);
+            List<PersonaEmpleado> admins = empleadoService.obtenerPorRol(1);
 
             // Convertimos Entidad -> DTO
             List<UsuarioResponse> respuesta = admins.stream()
@@ -224,9 +224,11 @@ public class AdminEmployeeController {
                 "Has sido registrado como " + rol + " en el sistema LactaCare.\n" +
                 "Tu usuario es: " + email + "\n" +
                 "Tu contraseña temporal es: " + tempPass + "\n\n" +
-                "IMPORTANTE: Al iniciar sesión (con Google o Correo) se te pedirá cambiar esta contraseña obligatoriamente.\n\n"
-                +
+                "IMPORTANTE: Tienes dos opciones para iniciar sesión:\n" +
+                "\t1. Con tu correo y esta contraseña temporal (deberás cambiarla)\n" +
+                "\t2. Con tu cuenta de Google (más rápido, sin cambio de password)\n\n" +
                 "Saludos,\nEquipo LactaCare");
+                
         mailSender.send(msg);
     }
 }

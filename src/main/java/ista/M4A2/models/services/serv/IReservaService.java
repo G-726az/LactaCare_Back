@@ -3,7 +3,7 @@ package ista.M4A2.models.services.serv;
 import java.time.LocalDate;
 import java.util.List;
 
-import ista.M4A2.dto.ReservaDTO; // <--- Importar DTO
+import ista.M4A2.models.dto.ReservaDTO;
 import ista.M4A2.models.entity.Reserva;
 
 public interface IReservaService {

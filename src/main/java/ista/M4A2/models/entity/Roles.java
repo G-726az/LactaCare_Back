@@ -1,5 +1,6 @@
 package ista.M4A2.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -19,6 +20,7 @@ public class Roles implements Serializable {
     private String nombreRol;
     
     @OneToMany(mappedBy = "rol")
+    @JsonIgnore  // Evita referencias circulares en JSON
     private List<PersonaEmpleado> empleados;
     
     // Constructores

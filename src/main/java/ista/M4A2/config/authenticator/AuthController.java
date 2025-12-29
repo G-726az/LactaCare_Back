@@ -215,7 +215,11 @@ private ResponseEntity<LoginResponse> loginPacienteUnificado(String correo, Stri
     userData.put("primer_apellido", paciente.getPrimerApellido());
     userData.put("telefono", paciente.getTelefono());
     userData.put("rol", "PACIENTE");
+<<<<<<< HEAD
     userData.put("rol_id", 6);
+=======
+    userData.put("rol_id", 3);
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     userData.put("tipo", "PACIENTE");
     userData.put("fecha_nacimiento", paciente.getFechaNacimiento());
     userData.put("perfil_img", paciente.getImagenPerfil());
@@ -265,7 +269,11 @@ private ResponseEntity<LoginResponse> loginEmpleadoUnificado(String correo, Stri
     
     if ("ADMINISTRADOR".equalsIgnoreCase(tipoUsuario)) {
         System.out.println("   - Validando rol de ADMINISTRADOR...");
+<<<<<<< HEAD
         if (rolId == null || (rolId != 1 && rolId != 3)) { // Permitir ID 1 o 3
+=======
+        if (rolId == null || rolId != 1 ) { // Permitir ID 1 
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
             System.out.println("   ❌ RECHAZADO: Se esperaba rol_id=1 o 3, pero tiene rol_id=" + rolId);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new LoginResponse(false, "No tienes permisos de administrador", null));

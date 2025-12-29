@@ -3,8 +3,11 @@ package ista.M4A2.models.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,7 +34,8 @@ public class Institucion implements Serializable {
     private byte[] logoInstitucion; // LONGBOB (mapeado a byte[])
 
     // Uno a Muchos con sala_lactancua (fk_Lactario_Id_Institucion_Institucion)
-    @OneToMany(mappedBy = "institucion")
+    @OneToMany(mappedBy = "institucion", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Sala_Lactancia> salas_lactancia;
 
 	public Long getIdInstitucion() {

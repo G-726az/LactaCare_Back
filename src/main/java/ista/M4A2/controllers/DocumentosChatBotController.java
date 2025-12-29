@@ -4,6 +4,7 @@ import ista.M4A2.models.entity.DocumentosChatBot;
 import ista.M4A2.models.services.serv.IDocumentosChatBotService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,9 +53,28 @@ public class DocumentosChatBotController {
         return documentosService.listarTodos();
     }
 
+    // -------------------------------------------------------------------
+    // MÉTODO CORREGIDO: Agregamos ("id")
+    // -------------------------------------------------------------------
+    @GetMapping("/{id}/ver")
+    public ResponseEntity<byte[]> verArchivo(@PathVariable("id") Long id) { // <--- CORRECCIÓN AQUÍ
+        DocumentosChatBot doc = documentosService.buscarPorId(id);
 
+        if (doc == null || doc.getContenido() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + doc.getNombreArchivo() + "\"")
+                .body(doc.getContenido());
+    }
+
+    // -------------------------------------------------------------------
+    // MÉTODO CORREGIDO: Agregamos ("id")
+    // -------------------------------------------------------------------
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+    public ResponseEntity<?> eliminar(@PathVariable("id") Long id) { // <--- CORRECCIÓN AQUÍ
         Map<String, Object> response = new HashMap<>();
         try {
             documentosService.eliminar(id);
@@ -63,6 +83,16 @@ public class DocumentosChatBotController {
         } catch (Exception e) {
             response.put("mensaje", "Error al eliminar el documento.");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/test-lectura")
+    public ResponseEntity<String> probarLecturaPDFs() {
+        try {
+            String textoExtraido = documentosService.obtenerTextoUnificadoDeTodosLosPDFs();
+            return ResponseEntity.ok(textoExtraido);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error extrayendo texto: " + e.getMessage());
         }
     }
 }

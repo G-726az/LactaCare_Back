@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -31,7 +33,7 @@ public class HorariosSala implements Serializable {
     
     // Relación inversa con salas
     @OneToMany(mappedBy = "horarioSala", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("horarioSala")
+    @JsonIgnore
     private List<Sala_Lactancia> salas;
     
     // Constructores

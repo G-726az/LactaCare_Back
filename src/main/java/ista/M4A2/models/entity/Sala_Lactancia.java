@@ -45,35 +45,53 @@ public class Sala_Lactancia implements Serializable {
     
     @Column(name = "Longitud_CMedico") 
     private String longitudCMedico;
+<<<<<<< HEAD
+=======
+    
+    @Column(name = "estado", length = 20)
+    private String estado;
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
 
     // === RELACIONES ===
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_Institucion")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Institucion institucion;
     
+<<<<<<< HEAD
     @OneToMany(mappedBy = "sala_lactancia", fetch = FetchType.LAZY)
+=======
+    @OneToMany(mappedBy = "sala_lactancia", fetch = FetchType.EAGER)
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     @JsonIgnoreProperties("sala_lactancia") 
     private List<Refrigerador> refrigeradores;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_horario_sala", nullable = true)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private HorariosSala horarioSala;
 
+<<<<<<< HEAD
     @ManyToOne(fetch = FetchType.LAZY)
+=======
+    @ManyToOne(fetch = FetchType.EAGER)
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     @JoinColumn(name = "id_dia_laborable_sala")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private DiasLaborablesSala diasLaborablesSala;
     
-    @OneToMany(mappedBy = "salaLactancia", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "salaLactancia", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("salaLactancia")
     private List<PersonaEmpleado> empleados;
 
-    @OneToMany(mappedBy = "salaLactancia", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "salaLactancia", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("salaLactancia")
     private List<PersonaPaciente> pacientes;
+
+    @OneToMany(mappedBy = "salaLactancia", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("salaLactancia")
+    private List<Cubiculos> cubiculos;
 
     // --- GETTERS Y SETTERS ---
 
@@ -181,6 +199,25 @@ public class Sala_Lactancia implements Serializable {
         this.diasLaborablesSala = diasLaborablesSala;
     }
     
+<<<<<<< HEAD
+=======
+    public List<Cubiculos> getCubiculos() {
+        return cubiculos;
+    }
+
+    public void setCubiculos(List<Cubiculos> cubiculos) {
+        this.cubiculos = cubiculos;
+    }
+    
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+    
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     public String aTexto() {
         StringBuilder sb = new StringBuilder();
         

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import ista.M4A2.dto.ReservaDTO; // <--- 1. IMPORTANTE: Importamos el DTO
+import ista.M4A2.models.dto.ReservaDTO;
 import ista.M4A2.models.entity.Reserva;
 import ista.M4A2.models.services.serv.IReservaService;
 

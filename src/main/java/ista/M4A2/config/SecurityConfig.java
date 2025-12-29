@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,21 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+<<<<<<< HEAD
+=======
+    
+    /**
+     * NUEVO: Ignora completamente Spring Security para estas rutas
+     * Esto evita problemas con LazyInitializationException
+     */
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+            .requestMatchers("/api/lactarios/**")
+            .requestMatchers("/api/instituciones/**")
+            .requestMatchers("/api/cubiculos/**");
+    }
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -68,19 +84,25 @@ public class SecurityConfig {
                 // Health check
                 .requestMatchers("/api/auth/health").permitAll()
                 
+                // ===== DESARROLLO: DESCOMENTAR PARA PERMITIR ACCESO SIN AUTH =====
+                // ⚠️ SOLO PARA DESARROLLO LOCAL - COMENTAR EN PRODUCCIÓN ⚠️
+                .requestMatchers("/api/empleados/**").permitAll()
+                // =================================================================
+                
                 // ===== RUTAS PROTEGIDAS POR ROL =====
                 // Solo ADMINISTRADORES pueden crear empleados
                 .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
                 
                 // Doctores y Admins pueden gestionar empleados
-                .requestMatchers(HttpMethod.GET, "/api/empleados/**")
-                    .hasAnyRole("DOCTOR", "ADMINISTRADOR")
-                .requestMatchers(HttpMethod.PUT, "/api/empleados/**")
-                    .hasAnyRole("DOCTOR", "ADMINISTRADOR")
+                // ⚠️ COMENTAR ESTAS LÍNEAS SI DESCOMENTASTE LA LÍNEA DE ARRIBA
+                // .requestMatchers(HttpMethod.GET, "/api/empleados/**")
+                //     .hasAnyRole("DOCTOR", "ADMINISTRADOR")
+                // .requestMatchers(HttpMethod.PUT, "/api/empleados/**")
+                //     .hasAnyRole("DOCTOR", "ADMINISTRADOR")
                 
                 // Solo Admins pueden eliminar empleados
-                .requestMatchers(HttpMethod.DELETE, "/api/empleados/**")
-                    .hasRole("ADMINISTRADOR")
+                // .requestMatchers(HttpMethod.DELETE, "/api/empleados/**")
+                //     .hasRole("ADMINISTRADOR")
                 
                 // Gestión de roles solo para Admins
                 .requestMatchers("/api/roles/**").hasRole("ADMINISTRADOR")

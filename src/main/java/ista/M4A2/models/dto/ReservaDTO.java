@@ -1,4 +1,4 @@
-package ista.M4A2.dto;
+package ista.M4A2.models.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

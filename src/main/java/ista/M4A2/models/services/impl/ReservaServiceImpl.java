@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ista.M4A2.models.dao.IReservaDao;
-import ista.M4A2.dto.ReservaDTO;
+import ista.M4A2.models.dto.ReservaDTO;
 import ista.M4A2.models.entity.Reserva;
 import ista.M4A2.models.services.serv.IReservaService;
 

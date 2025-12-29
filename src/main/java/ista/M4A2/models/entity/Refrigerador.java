@@ -3,8 +3,11 @@ package ista.M4A2.models.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -42,10 +45,12 @@ public class Refrigerador implements Serializable {
     private Integer columnaRefrigerador;
     
     // Relaciones Inversas (Estado_Refrigerador, Biberones, Ubicacion_Contenedor)
-    @OneToMany(mappedBy = "refrigerador")
+    @OneToMany(mappedBy = "refrigerador",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Estado_Refrigerador> estadosRefrigerador;
     
-    @OneToMany(mappedBy = "refrigerador")
+    @OneToMany(mappedBy = "refrigerador",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Ubicacion_Contenedor> ubicacionesContenedor;
 
 	public Long getIdRefrigerador() {

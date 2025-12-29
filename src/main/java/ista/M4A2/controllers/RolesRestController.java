@@ -1,6 +1,6 @@
 package ista.M4A2.controllers;
 
-import ista.M4A2.dto.RolDTO;
+import ista.M4A2.models.dto.RolDTO;
 import ista.M4A2.models.entity.Roles;
 import ista.M4A2.models.services.serv.RolesService;
 

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore; // <--- IMPRESCINDIBLE
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -82,18 +83,30 @@ public class PersonaPaciente implements Serializable {
     @Column(name = "reset_code_expiration")
     private LocalDateTime resetCodeExpiration;
 
-    // ===== RELACIONES =====
+    // ===== RELACIONES (AQUÍ ESTÁ LA CORRECCIÓN MASIVA) =====
 
+<<<<<<< HEAD
+=======
+    // 1. Reservas ignoradas
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     @OneToMany(mappedBy = "personaPaciente")
-    @JsonIgnoreProperties("personaPaciente")
+    @JsonIgnore
     private List<Reserva> reservas;
 
+<<<<<<< HEAD
+=======
+    // 2. Contactos de Emergencia ignorados (Este era el error actual)
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     @OneToMany(mappedBy = "personaPaciente", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("personaPaciente")
+    @JsonIgnore
     private List<ContactoEmergencia> contactosEmergencia;
 
+<<<<<<< HEAD
+=======
+    // 3. Lactantes ignorados (Para prevenir el siguiente error)
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     @OneToMany(mappedBy = "personaPaciente", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("personaPaciente")
+    @JsonIgnore
     private List<Lactante> lactantes;
     
     @ManyToOne(fetch = FetchType.LAZY)

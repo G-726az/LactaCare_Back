@@ -31,7 +31,7 @@ public class CrearEmpleadoRequest {
     private String telefono;
 
     @NotBlank(message = "El rol es obligatorio")
-    @Pattern(regexp = "DOCTOR|ADMINISTRADOR", message = "El rol debe ser DOCTOR o ADMINISTRADOR")
+    @Pattern(regexp = "MEDICO|ADMINISTRADOR", message = "El rol debe ser MEDICO o ADMINISTRADOR")
     private String rol;
 
     // Importante: Usamos LocalDate para manejar fechas correctamente

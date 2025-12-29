@@ -3,6 +3,8 @@ package ista.M4A2.models.entity;
 import java.io.Serializable;
 import java.util.List;
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -39,7 +41,7 @@ public class DiasLaborablesSala implements Serializable {
     
     // Relación inversa con salas
     @OneToMany(mappedBy = "diasLaborablesSala", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("diasLaborablesSala")
+    @JsonIgnore
     private List<Sala_Lactancia> salas;
 
     // Getters y Setters

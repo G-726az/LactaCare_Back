@@ -1,4 +1,4 @@
-package ista.M4A2.dto;
+package ista.M4A2.models.dto;
 
 //Un record es una clase inmutable perfecta para DTOs
 public record RolDTO(

@@ -1,5 +1,6 @@
 package ista.M4A2.controllers;
 
+import ista.M4A2.models.dto.PersonaEmpleadoDTO;
 import ista.M4A2.models.entity.PersonaEmpleado;
 import ista.M4A2.models.services.serv.PersonaEmpleadoService;
 import ista.M4A2.verificaciones.PasswordValidator;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/empleados")
@@ -24,20 +26,23 @@ public class PersonaEmpleadoRestController {
     private PasswordEncoder passwordEncoder;
     
     @GetMapping
-    public ResponseEntity<List<PersonaEmpleado>> obtenerTodos() {
+    public ResponseEntity<List<PersonaEmpleadoDTO>> obtenerTodos() {
         try {
             List<PersonaEmpleado> empleados = empleadoService.obtenerTodos();
-            return ResponseEntity.ok(empleados);
+            List<PersonaEmpleadoDTO> empleadosDTO = empleados.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(empleadosDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<PersonaEmpleado> obtenerPorId(@PathVariable Integer id) {
+    public ResponseEntity<PersonaEmpleadoDTO> obtenerPorId(@PathVariable Integer id) {
         try {
             PersonaEmpleado empleado = empleadoService.obtenerPorId(id);
-            return ResponseEntity.ok(empleado);
+            return ResponseEntity.ok(convertToDTO(empleado));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
@@ -46,10 +51,10 @@ public class PersonaEmpleadoRestController {
     }
     
     @GetMapping("/cedula/{cedula}")
-    public ResponseEntity<PersonaEmpleado> obtenerPorCedula(@PathVariable String cedula) {
+    public ResponseEntity<PersonaEmpleadoDTO> obtenerPorCedula(@PathVariable String cedula) {
         try {
             PersonaEmpleado empleado = empleadoService.obtenerPorCedula(cedula);
-            return ResponseEntity.ok(empleado);
+            return ResponseEntity.ok(convertToDTO(empleado));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
@@ -58,10 +63,10 @@ public class PersonaEmpleadoRestController {
     }
     
     @GetMapping("/correo/{correo}")
-    public ResponseEntity<PersonaEmpleado> obtenerPorCorreo(@PathVariable String correo) {
+    public ResponseEntity<PersonaEmpleadoDTO> obtenerPorCorreo(@PathVariable String correo) {
         try {
             PersonaEmpleado empleado = empleadoService.obtenerPorCorreo(correo);
-            return ResponseEntity.ok(empleado);
+            return ResponseEntity.ok(convertToDTO(empleado));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
@@ -70,10 +75,13 @@ public class PersonaEmpleadoRestController {
     }
     
     @GetMapping("/rol/{idRol}")
-    public ResponseEntity<List<PersonaEmpleado>> obtenerPorRol(@PathVariable Integer idRol) {
+    public ResponseEntity<List<PersonaEmpleadoDTO>> obtenerPorRol(@PathVariable Integer idRol) {
         try {
             List<PersonaEmpleado> empleados = empleadoService.obtenerPorRol(idRol);
-            return ResponseEntity.ok(empleados);
+            List<PersonaEmpleadoDTO> empleadosDTO = empleados.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(empleadosDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -93,7 +101,7 @@ public class PersonaEmpleadoRestController {
             }
             
             PersonaEmpleado nuevoEmpleado = empleadoService.guardar(empleado);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoEmpleado);
+            return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(nuevoEmpleado));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -137,7 +145,7 @@ public class PersonaEmpleadoRestController {
             }
             
             PersonaEmpleado empleadoActualizado = empleadoService.guardar(empleadoExistente);
-            return ResponseEntity.ok(empleadoActualizado);
+            return ResponseEntity.ok(convertToDTO(empleadoActualizado));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
@@ -156,4 +164,43 @@ public class PersonaEmpleadoRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+<<<<<<< HEAD
+=======
+    
+    /**
+     * Método auxiliar para convertir PersonaEmpleado a DTO
+     */
+    private PersonaEmpleadoDTO convertToDTO(PersonaEmpleado empleado) {
+        PersonaEmpleadoDTO dto = new PersonaEmpleadoDTO();
+        dto.setIdPerEmpleado(empleado.getIdPerEmpleado());
+        dto.setPerfilEmpleadoImg(empleado.getPerfilEmpleadoImg());
+        dto.setCedula(empleado.getCedula());
+        dto.setPrimerNombre(empleado.getPrimerNombre());
+        dto.setSegundoNombre(empleado.getSegundoNombre());
+        dto.setPrimerApellido(empleado.getPrimerApellido());
+        dto.setSegundoApellido(empleado.getSegundoApellido());
+        dto.setCorreo(empleado.getCorreo());
+        dto.setTelefono(empleado.getTelefono());
+        dto.setFechaNacimiento(empleado.getFechaNacimiento());
+        
+        // Convertir rol a DTO (sin la colección de empleados)
+        if (empleado.getRol() != null) {
+            PersonaEmpleadoDTO.RolDTO rolDTO = new PersonaEmpleadoDTO.RolDTO();
+            rolDTO.setIdRol(empleado.getRol().getIdRoles());  // ⭐ Corregido: getIdRoles()
+            rolDTO.setNombreRol(empleado.getRol().getNombreRol());
+            dto.setRol(rolDTO);
+        }
+        
+        // IDs de relaciones opcionales
+        if (empleado.getSalaLactancia() != null) {
+            // ⭐ Corregido: getIdLactario() y convertir Long a Integer
+            dto.setSalaLactanciaId(empleado.getSalaLactancia().getIdLactario().intValue());
+        }
+        if (empleado.getHorarioEmpleado() != null) {
+            dto.setHorarioEmpleadoId(empleado.getHorarioEmpleado().getIdHorarioEmpleado());
+        }
+        
+        return dto;
+    }
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
 }

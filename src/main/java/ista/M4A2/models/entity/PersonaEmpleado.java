@@ -84,8 +84,14 @@ public class PersonaEmpleado implements Serializable {
 
     // ===== RELACIONES =====
 
+<<<<<<< HEAD
     @ManyToOne
+=======
+    // ⭐ CAMBIO PRINCIPAL: FetchType.EAGER y @JsonIgnoreProperties
+    @ManyToOne(fetch = FetchType.EAGER)
+>>>>>>> fd5e5d2 (Cambios en SecurityConfig, ubicacion de dto's, y ajustes en entity y controllers para manejo de sala_lactancia e intituciones)
     @JoinColumn(name = "Rol_empleado", referencedColumnName = "Id_roles")
+    @JsonIgnoreProperties({"empleados", "hibernateLazyInitializer", "handler"})
     private Roles rol;
 
     @ManyToOne(fetch = FetchType.LAZY)
